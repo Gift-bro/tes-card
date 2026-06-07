@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Bela 🌹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --rose:#C0392B;--rose-light:#E8A09A;--rose-dark:#7B241C;
+  --gold:#D4A96A;--gold-light:#F0D5A0;--cream:#F5E6D3;
+  --dark:#0F0505;--dark2:#1A0808;--dark3:#2A0C0C;
+}
+html,body{width:100%;min-height:100vh;background:var(--dark);font-family:'Lato',sans-serif;overflow-x:hidden;color:var(--cream);}
+
+/* PARTICLES */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.p{position:absolute;border-radius:50% 0 50% 0;opacity:0;animation:pfall linear infinite;}
+@keyframes pfall{0%{transform:translateY(-30px) rotate(0deg);opacity:0;}10%{opacity:.5;}90%{opacity:.2;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#2d0d0d 0%,#0f0505 100%);transition:opacity 1s ease,visibility 1s ease;}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.splash-rose{font-size:5rem;animation:roseFloat 2s ease-in-out infinite,roseFadeIn 1.5s ease forwards;display:block;text-align:center;}
+@keyframes roseFadeIn{from{opacity:0;transform:scale(.6);}to{opacity:1;transform:scale(1);}}
+@keyframes roseFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.splash-title{font-family:'Cinzel',serif;font-size:clamp(2rem,6vw,3.5rem);color:var(--gold-light);letter-spacing:.12em;text-align:center;margin-top:1rem;animation:fadeUp 1s ease .5s both;text-shadow:0 0 40px rgba(212,169,106,.4);}
+.splash-name{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3rem);color:var(--gold-light);letter-spacing:.15em;text-align:center;margin:.3rem 0;font-style:normal;}
+.splash-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,3vw,1.3rem);color:var(--rose-light);letter-spacing:.2em;text-align:center;animation:fadeUp 1s ease .8s both;}
+.splash-btn{margin-top:2.5rem;padding:.8rem 2.5rem;background:transparent;border:1px solid rgba(192,57,43,.5);color:var(--gold-light);font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.2em;cursor:pointer;border-radius:2px;animation:fadeUp 1s ease 1.2s both,glowPulse 2s ease 1.5s infinite;transition:all .3s;}
+.splash-btn:hover{background:rgba(192,57,43,.2);border-color:var(--rose);box-shadow:0 0 20px rgba(192,57,43,.3);}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 10px rgba(192,57,43,.2);}50%{box-shadow:0 0 25px rgba(192,57,43,.5);}}
+.splash-candles{display:flex;justify-content:center;gap:1.2rem;margin:1.5rem 0;}
+
+/* CANDLES */
+.candle{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.flame{width:8px;height:16px;background:radial-gradient(ellipse at 50% 80%,#ffd700,#ff8c00 50%,rgba(255,60,0,.2));border-radius:50% 50% 40% 40%;box-shadow:0 0 10px rgba(255,180,0,.7);animation:flicker .7s ease-in-out infinite alternate;}
+@keyframes flicker{0%{transform:scaleX(1) scaleY(1) rotate(-2deg);opacity:1;}100%{transform:scaleX(.8) scaleY(1.15) rotate(2deg);opacity:.85;}}
+.candle-body{width:10px;height:30px;background:linear-gradient(180deg,#f5e6c8,#c9a87a);border-radius:2px;}
+
+/* APP */
+#app{display:none;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
+#app.show{display:flex;}
+
+/* HEADER */
+.header{position:relative;text-align:center;padding:3rem 1rem 2rem;background:radial-gradient(ellipse at top,#2d0d0d 0%,#0f0505 60%);overflow:hidden;}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,57,43,.5),transparent);}
+.header-rose{font-size:3rem;animation:roseFloat 3s ease-in-out infinite;display:block;margin-bottom:.5rem;}
+.header-name{font-family:'Cinzel',serif;font-size:clamp(2.2rem,5vw,3.5rem);color:var(--gold-light);letter-spacing:.1em;text-shadow:0 0 40px rgba(212,169,106,.4);}
+.header-hbd{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.9rem,2.5vw,1.2rem);color:var(--rose-light);letter-spacing:.25em;text-transform:uppercase;margin-top:.25rem;}
+.header-candles{display:flex;justify-content:center;gap:1rem;margin-top:1.2rem;}
+
+/* NAV */
+.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(10,3,3,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(192,57,43,.2);padding:.6rem .5rem;overflow-x:auto;scrollbar-width:none;}
+.nav-wrap::-webkit-scrollbar{display:none;}
+.nav{display:flex;gap:.4rem;width:max-content;margin:0 auto;}
+.nav-btn{padding:.5rem .9rem;background:transparent;border:1px solid rgba(192,57,43,.25);color:rgba(212,169,106,.7);font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border-radius:2px;white-space:nowrap;transition:all .25s;}
+.nav-btn:hover{background:rgba(192,57,43,.15);color:var(--gold-light);border-color:rgba(192,57,43,.5);}
+.nav-btn.active{background:rgba(192,57,43,.25);color:var(--gold-light);border-color:var(--rose);}
+
+/* PAGES */
+.page{display:none;padding:2.5rem 1.5rem 4rem;max-width:680px;margin:0 auto;width:100%;animation:pageIn .6s ease;}
+.page.active{display:block;}
+@keyframes pageIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* SECTION TITLE */
+.sec-title{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold-light);letter-spacing:.12em;text-align:center;margin-bottom:.4rem;}
+.sec-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--rose-light);text-align:center;margin-bottom:2rem;letter-spacing:.1em;}
+.divider{display:flex;align-items:center;gap:10px;margin:1.5rem 0;}
+.dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(192,57,43,.5),transparent);}
+.dd{width:5px;height:5px;background:rgba(192,57,43,.7);transform:rotate(45deg);}
+
+/* CARD */
+.card{background:linear-gradient(145deg,rgba(26,8,8,.9),rgba(42,12,12,.8));border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.5rem;margin-bottom:1.2rem;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(192,57,43,.15);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,169,106,.3),transparent);}
+.card-icon{font-size:1.8rem;margin-bottom:.7rem;display:block;text-align:center;}
+.card-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);letter-spacing:.15em;text-align:center;margin-bottom:.8rem;text-transform:uppercase;}
+.card-body{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(245,230,211,.8);line-height:1.9;text-align:center;font-style:italic;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem;}
+.timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(192,57,43,.5),transparent);}
+.tl-item{position:relative;padding-left:1.5rem;margin-bottom:1.8rem;}
+.tl-dot{position:absolute;left:-.5rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:var(--rose-dark);border:2px solid var(--rose);box-shadow:0 0 8px rgba(192,57,43,.5);}
+.tl-date{font-family:'Cinzel',serif;font-size:.7rem;color:var(--rose-light);letter-spacing:.15em;margin-bottom:.3rem;}
+.tl-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,230,211,.85);line-height:1.8;}
+
+/* LIKES GRID */
+.likes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;}
+.like-card{background:rgba(26,8,8,.8);border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.2rem .8rem;text-align:center;transition:all .3s;cursor:default;}
+.like-card:hover{background:rgba(42,12,12,.9);border-color:rgba(192,57,43,.5);transform:scale(1.05);}
+.like-emoji{font-size:2rem;display:block;margin-bottom:.5rem;}
+.like-label{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--gold-light);font-style:italic;}
+
+/* QUOTES */
+.quote-box{position:relative;background:linear-gradient(145deg,rgba(26,8,8,.95),rgba(42,12,12,.9));border:1px solid rgba(212,169,106,.2);border-radius:4px;padding:2.5rem 2rem;text-align:center;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.quote-mark{font-size:3rem;color:rgba(192,57,43,.3);font-family:'Cinzel',serif;line-height:1;margin-bottom:.5rem;}
+.quote-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--cream);line-height:1.9;margin-bottom:1rem;transition:opacity .4s;}
+.quote-nav{display:flex;gap:.8rem;justify-content:center;margin-top:1.2rem;flex-wrap:wrap;}
+.q-btn{width:8px;height:8px;border-radius:50%;background:rgba(192,57,43,.3);border:1px solid rgba(192,57,43,.5);cursor:pointer;transition:all .3s;padding:0;}
+.q-btn.active{background:var(--rose);box-shadow:0 0 8px rgba(192,57,43,.5);}
+
+/* SONG */
+.song-card{background:linear-gradient(135deg,rgba(26,8,8,.95),rgba(60,15,15,.9));border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.5rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:1rem;transition:all .3s;}
+.song-card:hover{border-color:rgba(192,57,43,.5);transform:translateX(4px);}
+.song-icon{font-size:2rem;flex-shrink:0;}
+.song-info{flex:1;}
+.song-title{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:.3rem;}
+.song-artist{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--rose-light);}
+.song-note{font-family:'Lato',sans-serif;font-size:.8rem;color:rgba(245,230,211,.5);margin-top:.3rem;}
+
+/* QUIZ */
+.quiz-card{background:rgba(26,8,8,.85);border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.8rem;margin-bottom:1.2rem;}
+.quiz-q{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold-light);font-style:italic;margin-bottom:1rem;line-height:1.6;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+@media(max-width:400px){.quiz-options{grid-template-columns:1fr;}}
+.q-opt{padding:.7rem .8rem;background:transparent;border:1px solid rgba(192,57,43,.25);color:rgba(245,230,211,.75);font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;cursor:pointer;border-radius:2px;transition:all .25s;text-align:left;}
+.q-opt:hover:not(:disabled){background:rgba(192,57,43,.15);border-color:rgba(192,57,43,.5);color:var(--cream);}
+.q-opt.correct{background:rgba(20,80,40,.3);border-color:#2ecc71;color:#a8e6c0;}
+.q-opt.wrong{background:rgba(80,20,20,.3);border-color:rgba(192,57,43,.6);color:var(--rose-light);}
+.quiz-result{margin-top:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold-light);text-align:center;min-height:1.5rem;}
+
+/* ACHIEVEMENT */
+.achievement-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem;background:rgba(26,8,8,.8);border:1px solid rgba(192,57,43,.2);border-radius:4px;margin-bottom:.8rem;transition:all .3s;}
+.achievement-item:hover{border-color:rgba(212,169,106,.3);transform:translateX(4px);}
+.ach-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem;}
+.ach-label{font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.25rem;}
+.ach-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,230,211,.85);line-height:1.7;}
+
+/* HOPE */
+.hope-item{text-align:center;padding:1.5rem 1rem;background:rgba(26,8,8,.8);border:1px solid rgba(192,57,43,.2);border-radius:4px;margin-bottom:.8rem;transition:all .3s;}
+.hope-item:hover{border-color:rgba(212,169,106,.25);box-shadow:0 4px 20px rgba(192,57,43,.1);}
+.hope-emoji{font-size:1.8rem;display:block;margin-bottom:.6rem;}
+.hope-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(245,230,211,.85);line-height:1.8;}
+
+/* DIFFICULT */
+.difficult-card{border-left:3px solid var(--rose-dark);background:rgba(20,5,5,.7);padding:1.2rem 1.2rem 1.2rem 1.5rem;margin-bottom:1rem;border-radius:0 4px 4px 0;transition:all .3s;}
+.difficult-card:hover{border-left-color:var(--rose);transform:translateX(3px);}
+.diff-title{font-family:'Cinzel',serif;font-size:.8rem;color:var(--rose-light);letter-spacing:.12em;margin-bottom:.4rem;}
+.diff-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,230,211,.8);line-height:1.8;}
+
+/* SCORE */
+.score-display{text-align:center;margin-top:2rem;padding:1.5rem;background:rgba(26,8,8,.9);border:1px solid rgba(212,169,106,.2);border-radius:4px;}
+.score-num{font-family:'Cinzel',serif;font-size:2.5rem;color:var(--gold-light);display:block;}
+.score-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--rose-light);}
+
+/* BUTTON */
+.btn-outline{background:transparent;border:1px solid rgba(192,57,43,.3);color:var(--gold);padding:.55rem 1.5rem;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;cursor:pointer;border-radius:2px;transition:all .3s;display:inline-block;margin-top:1rem;}
+.btn-outline:hover{background:rgba(192,57,43,.2);border-color:rgba(192,57,43,.6);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* RESPONSIVE */
+@media(max-width:500px){
+  .nav-btn{font-size:.6rem;padding:.45rem .7rem;}
+  .splash-title{font-size:1.8rem;}
+  .header-name{font-size:2rem;}
+  .quote-text{font-size:1.1rem;}
+  .likes-grid{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div style="text-align:center;padding:2rem;max-width:500px;width:100%;">
+    <span class="splash-rose">🌹</span>
+    <div class="splash-title">Happy Birthday</div>
+    <div class="splash-name">Bela</div>
+    <div class="splash-sub" style="margin-bottom:.5rem;">Sebuah hadiah kecil yang penuh cinta</div>
+    <div class="splash-candles">
+      <div class="candle"><div class="flame"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-delay:.2s;animation-duration:.6s"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-delay:.4s;animation-duration:.9s"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-delay:.1s;animation-duration:.8s"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-delay:.3s;animation-duration:.7s"></div><div class="candle-body"></div></div>
+    </div>
+    <button class="splash-btn" onclick="enterApp()">✦ Buka Hadiah ✦</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <div class="header">
+    <span class="header-rose">🌹</span>
+    <div class="header-name">Bela</div>
+    <div class="header-hbd">✦ Selamat Ulang Tahun ✦</div>
+    <div class="header-candles">
+      <div class="candle"><div class="flame"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-duration:.6s"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-duration:.85s"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-duration:.65s"></div><div class="candle-body"></div></div>
+      <div class="candle"><div class="flame" style="animation-duration:.9s"></div><div class="candle-body"></div></div>
+    </div>
+  </div>
+
+  <nav class="nav-wrap">
+    <div class="nav">
+      <button class="nav-btn active" onclick="showPage('p-awal',this)">💌 Awal Bertemu</button>
+      <button class="nav-btn" onclick="showPage('p-kenangan',this)">📸 Kenangan</button>
+      <button class="nav-btn" onclick="showPage('p-suka',this)">💝 Hal Disukai</button>
+      <button class="nav-btn" onclick="showPage('p-sulit',this)">🌧 Saat Sulit</button>
+      <button class="nav-btn" onclick="showPage('p-pencapaian',this)">🏆 Pencapaian</button>
+      <button class="nav-btn" onclick="showPage('p-harapan',this)">✨ Harapan</button>
+      <button class="nav-btn" onclick="showPage('p-quotes',this)">💬 Quotes</button>
+      <button class="nav-btn" onclick="showPage('p-lagu',this)">🎵 Lagu</button>
+      <button class="nav-btn" onclick="showPage('p-quiz',this)">🎯 Pertanyaan</button>
+    </div>
+  </nav>
+
+  <!-- AWAL BERTEMU -->
+  <div class="page active" id="p-awal">
+    <div class="sec-title">Awal Kita Bertemu</div>
+    <div class="sec-sub">Momen yang mengubah segalanya</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="card">
+      <span class="card-icon">💌</span>
+      <div class="card-title">Saat Pertama Kali</div>
+      <div class="card-body">Ada sesuatu yang berbeda ketika pertama kali aku melihatmu.<br>Entah apa — mungkin senyumanmu, mungkin caramu berbicara,<br>tapi aku tahu, pertemuan ini bukan sesuatu yang biasa.</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Pertemuan Pertama</div><div class="tl-text">Saat itu aku tidak tahu bahwa hari itu akan menjadi salah satu hari terpenting dalam hidupku. Kamu hadir dan duniaku terasa lebih hangat.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Percakapan Pertama</div><div class="tl-text">Kata-kata pertama yang kamu ucapkan sudah membuatku ingin terus mendengarmu bicara. Ada ketenangan dalam suaramu yang tidak bisa aku jelaskan.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Saat Aku Sadar</div><div class="tl-text">Ada satu momen, ketika kamu tertawa, aku sadar bahwa aku tidak ingin kehilangan orang ini dari hidupku. Tidak pernah.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kini</div><div class="tl-text">Dan di sini kita, bersama, dan aku bersyukur setiap hari untuk pertemuan itu. Semoga hubungan kita langgeng selamanya.</div></div>
+    </div>
+  </div>
+
+  <!-- KENANGAN -->
+  <div class="page" id="p-kenangan">
+    <div class="sec-title">Kenangan Kita</div>
+    <div class="sec-sub">Setiap momen yang tersimpan di hati</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="card"><span class="card-icon">📸</span><div class="card-title">Momen Bersama</div><div class="card-body">Di antara semua kenangan yang pernah aku punya,<br>kenangan bersamamu selalu yang paling berharga.</div></div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 01</div><div class="tl-text">Momen-momen kecil bersamamu — ngobrol panjang sampai larut, ketawa hal-hal sepele — semua itu tak ternilai.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 02</div><div class="tl-text">Hari-hari saat kita jalan berdua, tanpa tujuan yang jelas, tapi setiap langkah bersamamu terasa sempurna.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 03</div><div class="tl-text">Saat kamu cerita tentang impianmu — aku selalu kagum. Kamu punya dunia dalam dirimu yang terus membuatku terpesona.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 04</div><div class="tl-text">Dan momen ulang tahunmu ini — aku ingin kamu tahu, setiap kenangan itu tersimpan rapi di hatiku. Untuk selamanya.</div></div>
+    </div>
+    <div class="card" style="margin-top:1.5rem;"><div class="card-body" style="font-size:1.2rem;">"Kenangan terbaik bukan tentang tempat yang kita kunjungi,<br>tapi tentang orang yang menemani kita di sana."</div></div>
+  </div>
+
+  <!-- HAL DISUKAI -->
+  <div class="page" id="p-suka">
+    <div class="sec-title">Hal yang Aku Sukai dari Kamu</div>
+    <div class="sec-sub">Semuanya — tapi ini beberapa di antaranya</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="likes-grid">
+      <div class="like-card"><span class="like-emoji">😊</span><div class="like-label">Senyumanmu</div></div>
+      <div class="like-card"><span class="like-emoji">🌟</span><div class="like-label">Semangatmu</div></div>
+      <div class="like-card"><span class="like-emoji">🤗</span><div class="like-label">Kehangatan</div></div>
+      <div class="like-card"><span class="like-emoji">💬</span><div class="like-label">Cara bicaramu</div></div>
+      <div class="like-card"><span class="like-emoji">😂</span><div class="like-label">Tawa yang tulus</div></div>
+      <div class="like-card"><span class="like-emoji">💪</span><div class="like-label">Keteguhanmu</div></div>
+      <div class="like-card"><span class="like-emoji">🌸</span><div class="like-label">Kelembutan hati</div></div>
+      <div class="like-card"><span class="like-emoji">🧠</span><div class="like-label">Kecerdasanmu</div></div>
+      <div class="like-card"><span class="like-emoji">🎨</span><div class="like-label">Kreativitasmu</div></div>
+      <div class="like-card"><span class="like-emoji">🌙</span><div class="like-label">Momen malammu</div></div>
+      <div class="like-card"><span class="like-emoji">🤍</span><div class="like-label">Ketulusanmu</div></div>
+      <div class="like-card"><span class="like-emoji">✨</span><div class="like-label">Seluruhnya</div></div>
+    </div>
+    <div class="card" style="margin-top:1.5rem;"><div class="card-body">Tapi yang paling aku sukai dari kamu adalah caramu ada —<br>tulus, hangat, dan selalu menjadi cahaya di hari-hariku.</div></div>
+  </div>
+
+  <!-- SAAT SULIT -->
+  <div class="page" id="p-sulit">
+    <div class="sec-title">Saat-Saat Sulit</div>
+    <div class="sec-sub">Yang menjadikan kita lebih kuat</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="card"><span class="card-icon">🌧</span><div class="card-body">Tidak ada hubungan yang tidak pernah melewati badai.<br>Kita pun punya momen-momen itu — dan kita melewatinya bersama.</div></div>
+    <div class="difficult-card"><div class="diff-title">✦ Saat Jarak Terasa Jauh</div><div class="diff-text">Ada hari-hari ketika kita tidak selalu bisa saling ada secara fisik. Tapi rasa itu tidak pernah pergi. Kamu selalu ada di pikiranku, bahkan ketika kita tidak bisa bertemu.</div></div>
+    <div class="difficult-card"><div class="diff-title">✦ Saat Kata-Kata Salah Terucap</div><div class="diff-text">Tidak ada manusia sempurna, begitu pun kita. Tapi setiap salah paham yang kita lewati, mengajarkan kita lebih banyak tentang satu sama lain.</div></div>
+    <div class="difficult-card"><div class="diff-title">✦ Saat Lelah Melanda</div><div class="diff-text">Di hari-hari paling melelahkan, bertemu denganmu — bahkan hanya sejenak — sudah cukup untuk memulihkan segalanya.</div></div>
+    <div class="card" style="margin-top:1rem;"><div class="card-body">Setiap badai yang kita lewati bersama<br>hanya membuktikan satu hal:<br>kita cukup kuat untuk terus melangkah bersama. 🌹</div></div>
+  </div>
+
+  <!-- PENCAPAIAN -->
+  <div class="page" id="p-pencapaian">
+    <div class="sec-title">Pencapaian Kita</div>
+    <div class="sec-sub">Hal-hal yang sudah kita raih bersama</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="achievement-item"><div class="ach-icon">🥂</div><div><div class="ach-label">✦ Pencapaian Pertama</div><div class="ach-text">Kita berhasil saling memahami, saling menerima apa adanya — dan itu bukan hal mudah. Itu pencapaian terbesar kita.</div></div></div>
+    <div class="achievement-item"><div class="ach-icon">💞</div><div><div class="ach-label">✦ Bertahan Bersama</div><div class="ach-text">Melewati hari-hari sulit dan tetap memilih satu sama lain — itu bukan kebetulan. Itu komitmen yang kita bangun berdua.</div></div></div>
+    <div class="achievement-item"><div class="ach-icon">🌱</div><div><div class="ach-label">✦ Tumbuh Bersama</div><div class="ach-text">Kita sudah tumbuh — masing-masing sebagai individu, dan sebagai pasangan. Aku bangga melihat siapa kamu hari ini.</div></div></div>
+    <div class="achievement-item"><div class="ach-icon">⭐</div><div><div class="ach-label">✦ Saling Mendukung</div><div class="ach-text">Setiap kali kamu punya mimpi, aku ada untuk mendukungmu. Dan kamu selalu melakukan hal yang sama untukku.</div></div></div>
+    <div class="achievement-item"><div class="ach-icon">🎂</div><div><div class="ach-label">✦ Hari Ini</div><div class="ach-text">Dan hari ini, ulang tahunmu, adalah pengingat bahwa kita masih di sini, bersama, dan itu adalah hal yang paling aku syukuri.</div></div></div>
+  </div>
+
+  <!-- HARAPAN -->
+  <div class="page" id="p-harapan">
+    <div class="sec-title">Harapan Masa Depan</div>
+    <div class="sec-sub">Semua yang aku doakan untukmu & kita</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="hope-item"><span class="hope-emoji">🌅</span><div class="hope-text">Semoga setiap pagi yang kamu bangun selalu diisi dengan kebahagiaan dan rasa syukur yang tulus.</div></div>
+    <div class="hope-item"><span class="hope-emoji">💫</span><div class="hope-text">Semoga semua impian yang kamu simpan di hati perlahan-lahan menjadi kenyataan, satu per satu.</div></div>
+    <div class="hope-item"><span class="hope-emoji">💞</span><div class="hope-text">Semoga hubungan kita terus tumbuh — lebih dalam, lebih kuat, lebih indah dari hari ke hari.</div></div>
+    <div class="hope-item"><span class="hope-emoji">🏡</span><div class="hope-text">Semoga kita suatu hari bisa membangun rumah — bukan hanya tempat tinggal, tapi rumah yang penuh cinta dan tawa.</div></div>
+    <div class="hope-item"><span class="hope-emoji">🌿</span><div class="hope-text">Semoga kamu selalu sehat, selalu kuat, dan selalu punya orang-orang yang mencintaimu dengan tulus — termasuk aku.</div></div>
+    <div class="hope-item"><span class="hope-emoji">✨</span><div class="hope-text">Dan semoga di ulang tahunmu yang akan datang, aku masih ada di sisimu, menyaksikan kamu terus bersinar.</div></div>
+  </div>
+
+  <!-- QUOTES -->
+  <div class="page" id="p-quotes">
+    <div class="sec-title">Quotes untuk Kamu</div>
+    <div class="sec-sub">Kata-kata yang menggambarkan kita</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="quote-box">
+      <div class="quote-mark">"</div>
+      <div class="quote-text" id="quote-text"></div>
+      <div class="quote-nav" id="quote-nav"></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn-outline" onclick="nextQuote()">✦ Quote Selanjutnya ✦</button>
+    </div>
+  </div>
+
+  <!-- LAGU -->
+  <div class="page" id="p-lagu">
+    <div class="sec-title">Lagu yang Disukai</div>
+    <div class="sec-sub">Melodi yang mengingatkan kita satu sama lain</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div class="card"><div class="card-body">Setiap lagu punya cerita. Dan beberapa lagu ini<br>selalu mengingatkanku padamu.</div></div>
+    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">Perfect</div><div class="song-artist">Ed Sheeran</div><div class="song-note">Karena kamu memang sempurna untukku</div></div></div>
+    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">All of Me</div><div class="song-artist">John Legend</div><div class="song-note">Sepenuh hatiku, untuk kamu</div></div></div>
+    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">A Thousand Years</div><div class="song-artist">Christina Perri</div><div class="song-note">Aku akan mencintaimu selama seribu tahun</div></div></div>
+    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">Lagu Favoritmu</div><div class="song-artist">Apapun yang kamu suka</div><div class="song-note">Lagu apapun yang kamu suka — itu juga laguku</div></div></div>
+    <div class="card" style="margin-top:1rem;"><div class="card-body">🎶 Setiap kali lagu ini terputar,<br>aku selalu tersenyum dan memikirkanmu. 🎶</div></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="page" id="p-quiz">
+    <div class="sec-title">Pertanyaan Kecil</div>
+    <div class="sec-sub">Seberapa baik kamu mengenal kita?</div>
+    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+    <div id="quiz-container"></div>
+    <div class="score-display" id="score-display" style="display:none;">
+      <span class="score-num" id="score-num">0/5</span>
+      <div class="score-label" id="score-label"></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn-outline" onclick="resetQuiz()">✦ Ulangi Quiz ✦</button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// PARTICLES
+(function(){
+  var pc=document.getElementById('particles');
+  var colors=['#8B1A1A','#A52020','#C0392B','#7B3030','#922B21'];
+  for(var i=0;i<35;i++){
+    var p=document.createElement('div');
+    p.className='p';
+    p.style.left=Math.random()*100+'%';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay=(Math.random()*12)+'s';
+    p.style.animationDuration=(8+Math.random()*10)+'s';
+    p.style.width=(5+Math.random()*7)+'px';
+    p.style.height=(9+Math.random()*9)+'px';
+    p.style.transform='rotate('+Math.random()*360+'deg)';
+    pc.appendChild(p);
+  }
+})();
+
+// SPLASH
+function enterApp(){
+  var splash=document.getElementById('splash');
+  splash.classList.add('hide');
+  setTimeout(function(){
+    splash.style.display='none';
+    var app=document.getElementById('app');
+    app.classList.add('show');
+  },1000);
+}
+
+// NAV
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// QUOTES
+var quotes=[
+  "Mencintaimu bukan pilihan — itu kebutuhan yang hadir secara alami di setiap napas yang aku hirup.",
+  "Kamu bukan hanya rumah yang aku pulangi, tapi juga cahaya yang membuatku ingin terus berjalan.",
+  "Di antara semua hal indah di dunia, kamu adalah yang paling ingin aku jaga selamanya.",
+  "Setiap hari bersamamu adalah hari yang tak ingin aku lewatkan satu pun.",
+  "Kamu hadir dan mengubah definisi kebahagiaanku menjadi sesuatu yang jauh lebih nyata.",
+  "Cinta bukan tentang menemukan orang yang sempurna, tapi tentang melihat kesempurnaan pada orang yang kamu cintai.",
+  "Bersama kamu, bahkan keheningan pun terasa berbicara hal-hal yang indah.",
+  "Aku tidak meminta bintang — aku hanya ingin terus memandang matamu setiap hari.",
+];
+var qi=0;
+
+function renderQuoteNav(){
+  var nav=document.getElementById('quote-nav');
+  nav.innerHTML='';
+  quotes.forEach(function(_,i){
+    var b=document.createElement('button');
+    b.className='q-btn'+(i===qi?' active':'');
+    b.onclick=(function(idx){return function(){qi=idx;showQuote();};})(i);
+    nav.appendChild(b);
+  });
+}
+
+function showQuote(){
+  var el=document.getElementById('quote-text');
+  el.style.opacity='0';
+  setTimeout(function(){
+    el.textContent=quotes[qi];
+    el.style.opacity='1';
+    renderQuoteNav();
+  },300);
+}
+
+function nextQuote(){
+  qi=(qi+1)%quotes.length;
+  showQuote();
+}
+showQuote();
+
+// QUIZ
+var quizData=[
+  {q:"Apa hal pertama yang membuatmu tertarik pada pasanganmu?",opts:["Senyumannya","Cara bicaranya","Matanya","Kepribadiannya"],ans:3,fb:"Kepribadian seseorang memang yang paling membekas! 💞"},
+  {q:"Jika harus memilih satu kata untuk mendeskripsikan hubungan kita, apa pilihanmu?",opts:["Hangat","Tulus","Kuat","Bahagia"],ans:1,fb:"Ketulusan adalah fondasi cinta yang sesungguhnya ✨"},
+  {q:"Di mana tempat favoritmu untuk menghabiskan waktu bersama?",opts:["Di rumah, santai berdua","Jalan-jalan keluar","Makan bareng","Di mana saja, asal bersama"],ans:3,fb:"Benar! Yang penting orangnya, bukan tempatnya 🌹"},
+  {q:"Hal apa yang paling kamu rindukan saat tidak bisa bertemu?",opts:["Suaranya","Senyumannya","Pelukannya","Semuanya"],ans:3,fb:"Rindu itu tanda cinta yang nyata 💌"},
+  {q:"Apa harapan terbesarmu untuk hubungan ini?",opts:["Selalu bahagia","Tumbuh bersama","Langgeng selamanya","Saling mendukung"],ans:2,fb:"Semoga hubungan kita langgeng dan terus tumbuh indah 🌸"},
+];
+var score=0,answered=[];
+
+function buildQuiz(){
+  var c=document.getElementById('quiz-container');
+  c.innerHTML='';
+  score=0;answered=[];
+  document.getElementById('score-display').style.display='none';
+  quizData.forEach(function(q,qidx){
+    var div=document.createElement('div');
+    div.className='quiz-card';
+    var optsHtml=q.opts.map(function(o,oi){
+      return '<button class="q-opt" onclick="answerQ('+qidx+','+oi+',this)">'+o+'</button>';
+    }).join('');
+    div.innerHTML='<div class="quiz-q">'+(qidx+1)+'. '+q.q+'</div><div class="quiz-options">'+optsHtml+'</div><div class="quiz-result" id="qr-'+qidx+'"></div>';
+    c.appendChild(div);
+  });
+}
+
+function answerQ(qidx,oi,btn){
+  if(answered.indexOf(qidx)>-1)return;
+  answered.push(qidx);
+  var q=quizData[qidx];
+  var opts=btn.parentElement.querySelectorAll('.q-opt');
+  opts.forEach(function(o,i){
+    o.disabled=true;
+    if(i===q.ans)o.classList.add('correct');
+    else if(i===oi)o.classList.add('wrong');
+  });
+  var res=document.getElementById('qr-'+qidx);
+  if(oi===q.ans){score++;res.textContent='✓ '+q.fb;}
+  else{res.textContent='✧ '+q.fb;}
+  if(answered.length===quizData.length){
+    setTimeout(function(){
+      var sd=document.getElementById('score-display');
+      sd.style.display='block';
+      document.getElementById('score-num').textContent=score+'/'+quizData.length;
+      var labels=['Semangat belajar satu sama lain ya! 💪','Bagus! Kamu semakin mengenalnya 💫','Kamu cukup mengenal pasanganmu! 🌹','Hampir sempurna! Kamu sangat mengenalnya 💞','Sempurna! Kamu dan pasanganmu luar biasa serasi! ✨'];
+      document.getElementById('score-label').textContent=labels[score];
+      sd.scrollIntoView({behavior:'smooth',block:'center'});
+    },500);
+  }
+}
+
+function resetQuiz(){buildQuiz();}
+buildQuiz();
+</script>
+</body>
+</html>
