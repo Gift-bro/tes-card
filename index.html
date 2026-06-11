@@ -178,18 +178,89 @@ body{font-family:'Lato',sans-serif;background:var(--ink);min-height:100vh;overfl
 .photo-wide-img{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;}
 .photo-placeholder-wide{aspect-ratio:16/7;background:linear-gradient(135deg,#fbcfe8,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
 
-/* ── MEMORIES ── */
-.mem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.mem-card{border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;cursor:pointer;transition:transform .2s;}
-.mem-card:hover{transform:translateY(-3px);}
-.mem-thumb{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2rem;}
-.mem-thumb img{width:100%;height:100%;object-fit:cover;}
-.t-photo{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
-.t-video{background:linear-gradient(135deg,#7c3aed,#4c1d95);}
-.t-special{background:linear-gradient(135deg,#374151,#1f2937);}
-.mem-label{padding:.5rem;font-size:.7rem;font-weight:700;color:#374151;text-align:center;background:#fff;}
-.play-icon{width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.5);}
-.play-icon::after{content:'';border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px;}
+/* ── MEMORIES room — video atas, 2 foto bawah ── */
+.mem-video-top { margin-bottom: 12px; }
+.mem-video-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg,#7c3aed,#4c1d95);
+}
+.mem-video-inner iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; border: 0;
+}
+.mem-video-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: rgba(255,255,255,.7);
+}
+
+/* 2 foto berdampingan */
+.mem-photos-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.mem-photo-col { display: flex; flex-direction: column; gap: 0; }
+.mem-photo-box {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f1f1f1;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid #e5e7eb;
+}
+/* Foto CONTAIN agar tidak terpotong, dengan background putih bersih */
+.mem-photo-box img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  background: #fff;
+  display: block;
+}
+.mem-photo-placeholder {
+  font-size: 2rem; color: #9ca3af;
+}
+.mem-label {
+  padding: .35rem .2rem .6rem;
+  font-size: .72rem; font-weight: 700;
+  color: #374151; text-align: center;
+}
+
+/* ── FOTO di ruang Awal Kita & Secret — contain agar tidak terpotong ── */
+.photo-card .photo-fit-wrap {
+  width: 100%; aspect-ratio: 4/3;
+  overflow: hidden; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 0;
+}
+.photo-card .photo-fit-wrap img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.photo-wide .photo-fit-wrap-wide {
+  width: 100%; aspect-ratio: 16/7;
+  overflow: hidden; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-wide .photo-fit-wrap-wide img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* Secret room photo — contain */
+.secret-photo-frame img {
+  width: 100%; display: block;
+  object-fit: contain;
+  background: #fff;
+  aspect-ratio: 3/4;
+}
 
 /* ── LIKES ── */
 .likes-list{display:flex;flex-direction:column;gap:10px;}
@@ -621,20 +692,35 @@ body{font-family:'Lato',sans-serif;background:var(--ink);min-height:100vh;overfl
       <div class="room-icon-circle" style="background:linear-gradient(135deg,#9b5de5,#6a28c8);">📸</div>
       <h2>Kenangan</h2>
     </div>
-    <div class="mem-grid">
-      <div class="mem-card">
-        <div class="mem-thumb t-photo" id="mem-photo3-wrap"><div style="font-size:2rem;">🖼️</div></div>
+
+    <!-- VIDEO — full width di atas -->
+    <div class="mem-video-top" id="mem-video-card">
+      <div class="mem-video-inner">
+        <!-- diisi JS jika ada video, fallback placeholder -->
+        <div class="mem-video-placeholder">
+          <div style="font-size:2.4rem;margin-bottom:.4rem;">🎬</div>
+          <div style="font-size:.8rem;opacity:.7;">Video Kenangan</div>
+        </div>
+      </div>
+      <div class="mem-label" style="padding:.5rem 0 0;text-align:center;font-size:.78rem;font-weight:700;color:#374151;">Video Kenangan</div>
+    </div>
+
+    <!-- 2 FOTO — berdampingan di bawah -->
+    <div class="mem-photos-row">
+      <div class="mem-photo-col">
+        <div class="mem-photo-box" id="mem-photo3-wrap">
+          <div class="mem-photo-placeholder">🖼️</div>
+        </div>
         <div class="mem-label">Momen Terabadikan</div>
       </div>
-      <div class="mem-card" id="mem-video-card">
-        <div class="mem-thumb t-video"><div class="play-icon"></div></div>
-        <div class="mem-label">Video Kenangan</div>
-      </div>
-      <div class="mem-card">
-        <div class="mem-thumb t-special" id="mem-photo4-wrap"><div style="font-size:2rem;">💑</div></div>
+      <div class="mem-photo-col">
+        <div class="mem-photo-box" id="mem-photo4-wrap">
+          <div class="mem-photo-placeholder">💑</div>
+        </div>
         <div class="mem-label">Waktu Istimewa</div>
       </div>
     </div>
+
     <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
   </div>
 </div>
@@ -829,8 +915,8 @@ const CONFIG = {
   /* ----------------------------------------------------------
      👤 IDENTITAS
      ---------------------------------------------------------- */
-  NAMA_PENERIMA : "Berli",          // ← Nama pasanganmu (yang akan menerima kartu)
-  NAMA_PENGIRIM : "Billy",          // ← Namamu (yang akan muncul di ucapan)
+  NAMA_PENERIMA : "Gifari",          // ← Nama pasanganmu (yang akan menerima kartu)
+  NAMA_PENGIRIM : "Sayang",          // ← Namamu (yang akan muncul di ucapan)
 
   /* ----------------------------------------------------------
      📸 FOTO
@@ -867,10 +953,10 @@ const CONFIG = {
      ✅ Link pendek → https://youtu.be/dQw4w9WgXcQ
      ✅ ID saja     → dQw4w9WgXcQ
      ---------------------------------------------------------- */
-  VIDEO_KENANGAN_ID    : "DHMhz2Adois",         // ← ID video kenangan (Ruang: Kenangan - klik thumbnail)
+  VIDEO_KENANGAN_ID    : "dQw4w9WgXcQ",         // ← ID video kenangan (Ruang: Kenangan - klik thumbnail)
                                      //   cth: "dQw4w9WgXcQ"
 
-  VIDEO_PESAN_AKHIR_ID : "DHMhz2Adois",         // ← ID video pesan terakhir (Ruang: Penutup)
+  VIDEO_PESAN_AKHIR_ID : "dQw4w9WgXcQ",         // ← ID video pesan terakhir (Ruang: Penutup)
                                      //   cth: "dQw4w9WgXcQ"
 
   /* ----------------------------------------------------------
@@ -885,17 +971,17 @@ const CONFIG = {
     {
       judul : "Lagu yang selalu mengingatkanku padamu",      // ← Judul lagu 1
       deskripsi : "Melodi yang terputar setiap kali aku merindukanmu.",  // ← Keterangan
-      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=2e15d454b4604cbb",                                            // ← Link Spotify/YouTube
+      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
     },
     {
       judul : "Lagu yang cocok untuk kita berdua",          // ← Judul lagu 2
       deskripsi : "Menggambarkan perjalanan kita dengan sangat sempurna.",
-      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=2e15d454b4604cbb",                                            // ← Link Spotify/YouTube
+      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
     },
     {
       judul : "Artis favoritmu",                            // ← Judul lagu 3
       deskripsi : "Karena aku tahu betapa berartinya musik ini untukmu.",
-      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=2e15d454b4604cbb",                                            // ← Link Spotify/YouTube
+      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
     },
   ],
 
@@ -1069,24 +1155,23 @@ function makeSpotifyEmbed(url){
     loading="lazy"></iframe>`;
 }
 
-function setPhoto(wrapId, url, style){
+// Render foto dengan object-fit:contain (foto tidak terpotong)
+function setPhoto(wrapId, url){
   const w = document.getElementById(wrapId);
   if(!w) return;
   const src = toEmbedPhoto(url);
-  if(!src){
-    return; // kosong, biarkan placeholder default
-  }
+  if(!src) return;
   if(src === '__google_photos__'){
-    w.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;background:#fdf2f8;aspect-ratio:4/3;gap:.4rem;">
+    w.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;background:#fdf2f8;gap:.4rem;">
       <div style="font-size:2rem;">📷</div>
-      <div style="font-size:.72rem;color:#be185d;text-align:center;line-height:1.4;">Google Photos tidak bisa di-embed.<br>Gunakan Imgur atau Google Drive.</div>
+      <div style="font-size:.68rem;color:#be185d;text-align:center;line-height:1.4;padding:0 .5rem;">Gunakan Google Drive<br>atau Imgur</div>
     </div>`;
     return;
   }
+  // object-fit:contain → foto tampil utuh, tidak terpotong
   w.innerHTML = `<img src="${src}" alt="foto"
-    style="${style}"
-    onerror="this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:#fdf2f8;font-size:2rem;>📷</div>'"
-  >`;
+    style="width:100%;height:100%;object-fit:contain;background:#fff;display:block;"
+    onerror="this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#fdf2f8;font-size:2rem;>📷</div>'">`;
 }
 
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
@@ -1094,68 +1179,37 @@ function esc(s){const d=document.createElement('div');d.textContent=s;return d.i
 /* ── APPLY CONTENT ─────────────────────────────────────────── */
 function applyContent(){
 
-  /* ── FOTO ── */
-  // Awal Kita: foto kenalan pertama
-  if(C.p1) setPhoto('begin-photo1-wrap', C.p1,
-    'width:100%;aspect-ratio:4/3;object-fit:cover;display:block;');
+  /* ── FOTO: Awal Kita ── */
+  if(C.p1) setPhoto('begin-photo1-wrap', C.p1);
+  if(C.p2) setPhoto('begin-photo2-wrap', C.p2);
 
-  // Awal Kita: foto pertama bersama (wide)
-  if(C.p2) setPhoto('begin-photo2-wrap', C.p2,
-    'width:100%;aspect-ratio:16/7;object-fit:cover;display:block;');
+  /* ── FOTO: Kenangan (2 foto di bawah video) ── */
+  if(C.p3) setPhoto('mem-photo3-wrap', C.p3);
+  if(C.p4) setPhoto('mem-photo4-wrap', C.p4);
 
-  // Kenangan: foto kiri & kanan
-  if(C.p3){
-    const w=document.getElementById('mem-photo3-wrap');
-    if(w){ w.style.padding='0'; w.style.overflow='hidden';
-      const src=toEmbedPhoto(C.p3);
-      if(src && src!=='__google_photos__')
-        w.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;display:block;"
-          onerror="this.style.display='none'">`;
-    }
-  }
-  if(C.p4){
-    const w=document.getElementById('mem-photo4-wrap');
-    if(w){ w.style.padding='0'; w.style.overflow='hidden';
-      const src=toEmbedPhoto(C.p4);
-      if(src && src!=='__google_photos__')
-        w.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;display:block;"
-          onerror="this.style.display='none'">`;
-    }
-  }
-
-  // Secret Room: foto
+  /* ── FOTO: Secret Room ── */
   if(C.p5){
-    const src=toEmbedPhoto(C.p5);
-    const f=document.getElementById('secret-photo-frame');
-    if(f && src && src!=='__google_photos__')
-      f.innerHTML=`<img src="${src}"
-        style="width:100%;display:block;object-fit:cover;aspect-ratio:3/4;"
+    const src = toEmbedPhoto(C.p5);
+    const f = document.getElementById('secret-photo-frame');
+    if(f && src && src !== '__google_photos__')
+      f.innerHTML = `<img src="${src}"
+        style="width:100%;display:block;object-fit:contain;background:#fff;aspect-ratio:3/4;"
         onerror="this.parentElement.innerHTML='<div class=secret-ph>💑</div>'">`;
   }
 
-  /* ── VIDEO — semua pakai YouTube embed iframe ── */
-  // Video Kenangan: ganti thumbnail dengan embed player
+  /* ── VIDEO: Kenangan — inject ke dalam .mem-video-inner ── */
   if(C.v1){
-    const card = document.getElementById('mem-video-card');
-    if(card){
-      card.onclick = null;
-      card.style.cursor = 'default';
-      card.querySelector('.mem-thumb').outerHTML = `
-        <div style="position:relative;aspect-ratio:1;overflow:hidden;border-radius:12px 12px 0 0;background:#1a1a2e;">
-          ${makeYTEmbed(C.v1)}
-        </div>`;
-    }
+    const inner = document.querySelector('#mem-video-card .mem-video-inner');
+    if(inner) inner.innerHTML = makeYTEmbed(C.v1);
   }
 
-  // Video Penutup (sudah ada, tapi pastikan pakai fungsi baru)
+  /* ── VIDEO: Penutup ── */
   if(C.v2){
     const wrap = document.getElementById('final-video-wrap');
-    if(wrap){
-      wrap.innerHTML = makeYTEmbed(C.v2);
-    }
+    if(wrap) wrap.innerHTML = makeYTEmbed(C.v2);
   }
 
-  /* ── MUSIK — Spotify embed player built-in ── */
+  /* ── MUSIK: Spotify embed player ── */
   const trackList = document.getElementById('track-list');
   if(trackList){
     const songs = [
