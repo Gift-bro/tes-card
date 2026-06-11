@@ -915,7 +915,7 @@ const CONFIG = {
   /* ----------------------------------------------------------
      👤 IDENTITAS
      ---------------------------------------------------------- */
-  NAMA_PENERIMA : "Berli",          // ← Nama pasanganmu (yang akan menerima kartu)
+  NAMA_PENERIMA : "Berliana",          // ← Nama pasanganmu (yang akan menerima kartu)
   NAMA_PENGIRIM : "Billy",          // ← Namamu (yang akan muncul di ucapan)
 
   /* ----------------------------------------------------------
@@ -943,21 +943,26 @@ const CONFIG = {
   FOTO_KENANGAN_2      : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Waktu istimewa (Ruang: Kenangan - kanan)
                                      //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
 
-  FOTO_SECRET          : "https://drive.google.com/file/d/1MK0TcmZ_YML1ff4QjljVe0oVpZdP-9It/view?usp=drive_link",         // ← Foto paling spesial berdua (Ruang: Ruang Rahasia)
+  FOTO_SECRET          : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Foto paling spesial berdua (Ruang: Ruang Rahasia)
                                      //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
 
   /* ----------------------------------------------------------
-     🎬 VIDEO (YouTube — diputar langsung di dalam aplikasi)
+     🎬 VIDEO (Google Drive — diputar langsung di dalam aplikasi)
+     Cara mendapat link Google Drive:
+       1. Upload video ke drive.google.com
+       2. Klik kanan → Bagikan → "Siapa saja yang punya link" → Viewer
+       3. Salin link, lalu paste langsung di bawah
      Format yang DIDUKUNG — cukup paste salah satu:
-     ✅ Link biasa  → https://www.youtube.com/watch?v=dQw4w9WgXcQ
-     ✅ Link pendek → https://youtu.be/dQw4w9WgXcQ
-     ✅ ID saja     → dQw4w9WgXcQ
+     ✅ Link share  → https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+     ✅ Link biasa  → https://drive.google.com/file/d/FILE_ID/view
+     ✅ Link /open  → https://drive.google.com/open?id=FILE_ID
+     (YouTube juga masih didukung sebagai fallback)
      ---------------------------------------------------------- */
-  VIDEO_KENANGAN_ID    : "dQw4w9WgXcQ",         // ← ID video kenangan (Ruang: Kenangan - klik thumbnail)
-                                     //   cth: "dQw4w9WgXcQ"
+  VIDEO_KENANGAN    : "https://drive.google.com/file/d/1_gdLPHJh8el4Qxr_ScedKuQRzPDx6Kpg/view?usp=drive_link",  // ← Link Google Drive video kenangan (Ruang: Kenangan)
+                           //   cth: "https://drive.google.com/file/d/1aBcDeFgH.../view"
 
-  VIDEO_PESAN_AKHIR_ID : "dQw4w9WgXcQ",         // ← ID video pesan terakhir (Ruang: Penutup)
-                                     //   cth: "dQw4w9WgXcQ"
+  VIDEO_PESAN_AKHIR : "https://drive.google.com/file/d/1_gdLPHJh8el4Qxr_ScedKuQRzPDx6Kpg/view?usp=drive_link",  // ← Link Google Drive video pesan terakhir (Ruang: Penutup)
+                           //   cth: "https://drive.google.com/file/d/1aBcDeFgH.../view"
 
   /* ----------------------------------------------------------
      🎵 LAGU (Spotify — diputar langsung di dalam aplikasi)
@@ -1058,8 +1063,8 @@ let triviaData=[];
       p3     : CONFIG.FOTO_KENANGAN_1,
       p4     : CONFIG.FOTO_KENANGAN_2,
       p5     : CONFIG.FOTO_SECRET,
-      v1     : CONFIG.VIDEO_KENANGAN_ID,
-      v2     : CONFIG.VIDEO_PESAN_AKHIR_ID,
+      v1     : CONFIG.VIDEO_KENANGAN,
+      v2     : CONFIG.VIDEO_PESAN_AKHIR,
       st1    : CONFIG.LAGU[0]?.judul,
       sd1    : CONFIG.LAGU[0]?.deskripsi,
       su1    : CONFIG.LAGU[0]?.link,
@@ -1137,13 +1142,42 @@ function toSpotifyEmbed(url){
   return '';
 }
 
-function makeYTEmbed(id){
-  const vid = toYTid(id);
-  if(!vid) return '';
-  return `<iframe style="width:100%;height:100%;position:absolute;inset:0;border:0;"
-    src="https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1"
-    allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-    allowfullscreen></iframe>`;
+// Konversi URL Google Drive video → format /preview yang bisa di-embed
+function toGDriveVideoEmbed(input){
+  if(!input) return '';
+  input = input.trim();
+  // Semua format Google Drive → ambil FILE_ID
+  const match = input.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/);
+  if(match) return `https://drive.google.com/file/d/${match[1]}/preview`;
+  // Sudah format /preview
+  if(input.includes('drive.google.com') && input.includes('/preview')) return input;
+  return '';
+}
+
+// Buat iframe embed — otomatis deteksi Google Drive atau YouTube
+function makeVideoEmbed(input){
+  if(!input) return '';
+  input = input.trim();
+
+  // Cek Google Drive dulu
+  const gdriveEmbed = toGDriveVideoEmbed(input);
+  if(gdriveEmbed){
+    return `<iframe style="width:100%;height:100%;position:absolute;inset:0;border:0;"
+      src="${gdriveEmbed}"
+      allow="autoplay"
+      allowfullscreen></iframe>`;
+  }
+
+  // Fallback YouTube (jika masih pakai YouTube)
+  const vid = toYTid(input);
+  if(vid){
+    return `<iframe style="width:100%;height:100%;position:absolute;inset:0;border:0;"
+      src="https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1"
+      allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+      allowfullscreen></iframe>`;
+  }
+
+  return '';
 }
 
 function makeSpotifyEmbed(url){
@@ -1200,13 +1234,13 @@ function applyContent(){
   /* ── VIDEO: Kenangan — inject ke dalam .mem-video-inner ── */
   if(C.v1){
     const inner = document.querySelector('#mem-video-card .mem-video-inner');
-    if(inner) inner.innerHTML = makeYTEmbed(C.v1);
+    if(inner) inner.innerHTML = makeVideoEmbed(C.v1);
   }
 
   /* ── VIDEO: Penutup ── */
   if(C.v2){
     const wrap = document.getElementById('final-video-wrap');
-    if(wrap) wrap.innerHTML = makeYTEmbed(C.v2);
+    if(wrap) wrap.innerHTML = makeVideoEmbed(C.v2);
   }
 
   /* ── MUSIK: Spotify embed player ── */
