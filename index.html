@@ -3,487 +3,1494 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Berli 🌹</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<title>Sebuah Pesan Untukmu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --rose:#C0392B;--rose-light:#E8A09A;--rose-dark:#7B241C;
-  --gold:#D4A96A;--gold-light:#F0D5A0;--cream:#F5E6D3;
-  --dark:#0F0505;--dark2:#1A0808;--dark3:#2A0C0C;
+:root{--ink:#0d0d12;--ink2:#2a2535;--mist:#6b6480;--rose:#c84b72;--gold:#c8972a;--gold-light:#f0d080;--parchment:#f7f3ee;--seal:#8b1a2e;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--ink);min-height:100vh;overflow-x:hidden;}
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.page,.room-page{display:none;min-height:100vh;position:relative;z-index:1;align-items:center;justify-content:center;flex-direction:column;padding:2rem 1.5rem;text-align:center;}
+.page.active,.room-page.active{display:flex;}
+.room-page.active{background:radial-gradient(ellipse at 10% 0%,rgba(200,75,114,.08),transparent 50%),radial-gradient(ellipse at 90% 100%,rgba(155,93,229,.06),transparent 50%),#f5f0fa;align-items:flex-start;padding-top:2rem;padding-bottom:3rem;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardIn{from{opacity:0;transform:scale(.88) translateY(30px) rotate(-1.5deg);}to{opacity:1;transform:scale(1) translateY(0) rotate(0);}}
+@keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+@keyframes sparkAnim{0%,100%{transform:scale(1) rotate(-5deg);}50%{transform:scale(1.2) rotate(5deg);}}
+@keyframes floatEnv{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-12px) rotate(1deg);}}
+@keyframes revealBoom{from{opacity:0;transform:scale(.72) rotate(-3deg);}to{opacity:1;transform:scale(1) rotate(0);}}
+@keyframes tagPop{from{transform:scale(0) rotate(-12deg);opacity:0;}to{transform:scale(1) rotate(0);opacity:1;}}
+@keyframes growLine{from{width:0;opacity:0;}to{width:80px;opacity:1;}}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+/* ── SETUP ── */
+#page-setup{background:transparent;}
+.setup-card{background:var(--parchment);border-radius:6px;padding:0;max-width:680px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.5);border:1px solid rgba(200,151,42,.15);position:relative;animation:fadeUp .9s cubic-bezier(.34,1.56,.64,1) .2s both;overflow:hidden;}
+.setup-header{background:linear-gradient(135deg,var(--ink),#1e1828);padding:2rem 2.2rem 1.5rem;text-align:center;border-bottom:1px solid rgba(200,151,42,.15);}
+.setup-header h1{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--parchment);margin:.3rem 0 .2rem;}
+.setup-header p{font-size:.8rem;color:rgba(200,151,42,.7);letter-spacing:1px;}
+.setup-body{padding:1.8rem 2.2rem;}
+.setup-section{margin-bottom:1.6rem;}
+.setup-section-title{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--rose);font-weight:700;margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid rgba(200,75,114,.15);display:flex;align-items:center;gap:.4rem;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:520px){.field-row{grid-template-columns:1fr;}}
+.field-group{margin-bottom:.8rem;}
+.field-label{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--mist);display:block;margin-bottom:.35rem;}
+.field-hint{font-size:.68rem;color:rgba(107,100,128,.6);margin-top:.25rem;font-style:italic;}
+.setup-input,.setup-textarea{width:100%;padding:.7rem .9rem;background:rgba(13,13,18,.05);border:1px solid rgba(200,151,42,.2);border-radius:4px;font-family:'Lato',sans-serif;font-size:.85rem;color:var(--ink);outline:none;transition:border-color .25s;}
+.setup-input:focus,.setup-textarea:focus{border-color:rgba(200,151,42,.55);background:rgba(200,151,42,.03);}
+.setup-input::placeholder,.setup-textarea::placeholder{color:rgba(107,100,128,.4);font-style:italic;}
+.setup-textarea{resize:vertical;min-height:70px;line-height:1.5;}
+.photo-grid-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:520px){.photo-grid-inputs{grid-template-columns:1fr;}}
+.setup-err{font-size:.75rem;color:var(--seal);min-height:1rem;margin:.4rem 0;opacity:0;transition:opacity .3s;text-align:center;}
+.setup-err.show{opacity:1;}
+.setup-footer{padding:1.2rem 2.2rem 1.8rem;background:rgba(13,13,18,.03);border-top:1px solid rgba(200,151,42,.1);}
+.btn-generate{width:100%;padding:.95rem;background:linear-gradient(135deg,var(--rose),var(--seal));color:#fff;border:none;border-radius:4px;font-family:'Lato',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;box-shadow:0 6px 20px rgba(139,26,46,.3);}
+.btn-generate:hover{opacity:.88;}
+.link-result{display:none;margin-top:1.2rem;padding:1rem;background:rgba(13,13,18,.06);border:1px solid rgba(200,151,42,.2);border-radius:4px;text-align:center;}
+.link-result.show{display:block;}
+.link-url{font-size:.72rem;color:var(--ink2);word-break:break-all;line-height:1.5;margin-bottom:.8rem;text-align:left;background:#fff;padding:.6rem;border-radius:3px;border:1px dashed rgba(200,151,42,.3);}
+.link-actions{display:flex;gap:8px;justify-content:center;}
+.btn-copy,.btn-preview{padding:.55rem 1.2rem;border:none;border-radius:3px;font-family:'Lato',sans-serif;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-copy{background:var(--rose);color:#fff;}
+.btn-copy:hover{background:var(--seal);}
+.btn-preview{background:var(--ink);color:var(--gold-light);border:1px solid rgba(200,151,42,.3);}
+.btn-preview:hover{background:#1e1828;}
+.copy-confirm{font-size:.72rem;color:var(--gold);margin-top:.5rem;min-height:1rem;opacity:0;transition:opacity .3s;}
+.copy-confirm.show{opacity:1;}
+.tip-box{background:rgba(200,151,42,.07);border:1px solid rgba(200,151,42,.2);border-radius:4px;padding:.8rem 1rem;margin-top:1rem;font-size:.75rem;color:var(--mist);line-height:1.6;text-align:left;}
+.tip-box strong{color:var(--gold);display:block;margin-bottom:.3rem;}
+
+/* ── ENVELOPE ── */
+#page-mystery{background:transparent;}
+.mystery-eyebrow{font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:rgba(107,100,128,.7);margin-bottom:3rem;animation:fadeUp 1.2s ease .3s both;}
+.envelope-wrap{margin:0 auto 3rem;width:220px;height:160px;position:relative;cursor:pointer;animation:fadeUp 1s ease .5s both,floatEnv 4s ease-in-out 1.5s infinite;filter:drop-shadow(0 0 40px rgba(200,75,114,.18));transition:filter .3s;}
+.envelope-wrap:hover{filter:drop-shadow(0 0 60px rgba(200,75,114,.35));}
+.env-body{width:220px;height:160px;background:linear-gradient(160deg,#1e1828,#2a2040);border-radius:6px;position:absolute;border:1px solid rgba(200,151,42,.25);}
+.env-body::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 49.5%,rgba(200,151,42,.08) 50%,transparent 50.5%),linear-gradient(-135deg,transparent 49.5%,rgba(200,151,42,.08) 50%,transparent 50.5%);}
+.env-flap{position:absolute;top:0;left:0;right:0;height:80px;clip-path:polygon(0 0,50% 55%,100% 0);background:linear-gradient(160deg,#251f35,#1a1525);transform-origin:top center;transition:transform .6s cubic-bezier(.4,0,.2,1);z-index:2;}
+.envelope-wrap.open .env-flap{transform:rotateX(180deg);}
+.env-seal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:radial-gradient(circle,var(--seal),#5a0f1e);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;z-index:3;border:2px solid rgba(200,151,42,.4);box-shadow:0 0 20px rgba(139,26,46,.5);transition:transform .3s,opacity .3s;}
+.envelope-wrap.open .env-seal{transform:translate(-50%,-50%) scale(0);opacity:0;}
+.env-letter-peek{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) translateY(0);width:170px;height:90px;background:var(--parchment);border-radius:4px 4px 0 0;opacity:0;transition:opacity .4s .3s,transform .5s .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 -4px 20px rgba(0,0,0,.3);}
+.env-letter-peek::after{content:'✦';color:var(--rose);font-size:1.2rem;opacity:.6;}
+.envelope-wrap.open .env-letter-peek{opacity:1;transform:translateX(-50%) translateY(-20px);}
+.mystery-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:rgba(247,243,238,.5);font-style:italic;font-weight:300;letter-spacing:1px;margin-bottom:.5rem;animation:fadeUp 1.2s ease .6s both;}
+.mystery-sub{font-size:.75rem;color:rgba(200,151,42,.5);letter-spacing:2.5px;animation:fadeUp 1.2s ease .9s both;margin-bottom:2.8rem;}
+.btn-ghost{padding:.85rem 2.2rem;background:transparent;color:rgba(247,243,238,.65);border:1px solid rgba(200,151,42,.3);border-radius:3px;font-family:'Lato',sans-serif;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;animation:fadeUp 1.2s ease 1.1s both;}
+.btn-ghost:hover{background:rgba(200,151,42,.07);border-color:rgba(200,151,42,.55);color:var(--gold-light);}
+
+/* ── LETTER RIDDLE ── */
+.letter-card{background:var(--parchment);border-radius:3px;padding:3rem 2.5rem;max-width:460px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.5);border:1px solid rgba(200,151,42,.15);position:relative;animation:cardIn .8s cubic-bezier(.34,1.56,.64,1) both;}
+.letter-card::before{content:'';position:absolute;inset:8px;border:1px solid rgba(200,151,42,.1);border-radius:2px;pointer-events:none;}
+.letter-ornament{display:block;font-size:1.5rem;color:var(--rose);opacity:.7;margin-bottom:1rem;}
+.letter-eyebrow{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--mist);margin-bottom:1.2rem;}
+.letter-divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 1.4rem;}
+.letter-body{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--ink2);line-height:1.9;font-style:italic;font-weight:300;margin-bottom:1.8rem;}
+.letter-body strong{font-style:normal;font-weight:600;color:var(--ink);}
+.verify-label{font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--mist);margin-bottom:.5rem;display:block;}
+.verify-input{width:100%;padding:.85rem 1.1rem;background:rgba(13,13,18,.06);border:1px solid rgba(200,151,42,.25);border-radius:3px;font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);outline:none;text-align:center;letter-spacing:1px;transition:border-color .25s;margin-bottom:.6rem;}
+.verify-input:focus{border-color:rgba(200,151,42,.5);}
+.verify-input::placeholder{color:rgba(107,100,128,.45);font-style:italic;}
+.input-hint{font-size:.72rem;color:rgba(107,100,128,.55);font-style:italic;margin-bottom:1.2rem;display:block;}
+.verify-err{font-size:.75rem;color:var(--seal);min-height:1rem;margin-bottom:.7rem;opacity:0;transition:opacity .3s;}
+.verify-err.show{opacity:1;}
+.btn-dark{width:100%;padding:.9rem;background:var(--ink);color:rgba(247,243,238,.82);border:1px solid rgba(200,151,42,.3);border-radius:3px;font-family:'Lato',sans-serif;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .25s;}
+.btn-dark:hover{background:#1e1828;border-color:rgba(200,151,42,.6);color:var(--gold-light);}
+
+/* ── LOADING ── */
+#page-loading{background:transparent;}
+.loading-text{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:rgba(247,243,238,.55);font-style:italic;font-weight:300;animation:pulse 1.8s ease-in-out infinite;}
+.loading-sub{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(200,151,42,.35);margin-top:1rem;}
+
+/* ── REVEAL ── */
+#page-reveal{background:radial-gradient(ellipse at 40% 30%,#1e0a14,var(--ink) 65%);}
+.reveal-card{background:rgba(247,243,238,.97);border-radius:4px;padding:3rem 2.5rem;max-width:500px;width:100%;box-shadow:0 0 0 1px rgba(200,151,42,.2),0 40px 100px rgba(0,0,0,.55);animation:revealBoom .9s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden;}
+.reveal-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(200,151,42,.17);border-radius:2px;pointer-events:none;}
+.reveal-tag{display:inline-block;background:var(--rose);color:#fff;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;padding:.28rem .9rem;border-radius:2px;margin-bottom:1.4rem;animation:tagPop .5s cubic-bezier(.34,1.56,.64,1) .45s both;}
+.reveal-sparkle{font-size:2.5rem;margin-bottom:.8rem;display:block;animation:sparkAnim 2s ease-in-out .6s infinite;}
+.reveal-hb{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:600;background:linear-gradient(135deg,var(--seal),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;margin-bottom:.3rem;animation:fadeUp .6s ease .5s both;}
+.reveal-name{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;color:var(--ink);margin-bottom:1rem;animation:fadeUp .6s ease .7s both;}
+.reveal-divider{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 1.2rem;animation:growLine .8s ease .9s both;}
+.reveal-wish{font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--mist);font-style:italic;line-height:1.9;font-weight:300;margin-bottom:1.5rem;animation:fadeUp .6s ease 1s both;}
+.reveal-emoji{font-size:1.55rem;letter-spacing:8px;margin-bottom:1.8rem;animation:fadeUp .6s ease 1.1s both;}
+.btn-museum{padding:.9rem 2.2rem;background:linear-gradient(135deg,var(--rose),var(--seal));color:#fff;border:none;border-radius:3px;font-family:'Lato',sans-serif;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 24px rgba(139,26,46,.3);animation:fadeUp .6s ease 1.2s both;}
+.btn-museum:hover{transform:translateY(-2px);}
+
+/* ── MUSEUM MENU ── */
+#page-museum{background:radial-gradient(ellipse at 20% 10%,rgba(200,75,114,.06),transparent 50%),radial-gradient(ellipse at 90% 90%,rgba(200,151,42,.06),transparent 50%),var(--parchment);align-items:flex-start;padding-top:2rem;padding-bottom:3rem;}
+.museum-wrap{background:rgba(255,255,255,.97);border-radius:4px;padding:2.5rem 2rem;max-width:600px;width:100%;box-shadow:0 20px 60px rgba(13,13,18,.12);border:1px solid rgba(200,151,42,.12);animation:fadeUp .7s ease both;margin:0 auto;}
+.museum-wrap h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;color:var(--ink);text-align:center;margin-bottom:.3rem;}
+.museum-sub{text-align:center;color:var(--mist);font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;margin-bottom:1.5rem;}
+.rooms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.room-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:.9rem .5rem;border:none;border-radius:12px;color:#fff;font-family:'Lato',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:transform .18s,box-shadow .18s;text-align:center;position:relative;overflow:hidden;min-height:78px;}
+.room-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2);}
+.room-btn:active{transform:translateY(0);}
+.room-icon-box{width:32px;height:32px;background:rgba(255,255,255,.22);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.room-btn.visited::after{content:'✓';position:absolute;top:5px;right:6px;font-size:.6rem;background:rgba(255,255,255,.3);border-radius:50%;width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-weight:900;}
+.room-btn.locked{opacity:.5;cursor:not-allowed;}
+.r-map{background:linear-gradient(135deg,#1a9fd4,#0a6fa0);}
+.r-begin{background:linear-gradient(135deg,#f0487a,#c41850);}
+.r-mem{background:linear-gradient(135deg,#9b5de5,#6a28c8);}
+.r-likes{background:linear-gradient(135deg,#f77f00,#d45500);}
+.r-diff{background:linear-gradient(135deg,#607080,#3a4a58);}
+.r-achiev{background:linear-gradient(135deg,#e8a800,#c07000);}
+.r-future{background:linear-gradient(135deg,#00b894,#007a60);}
+.r-quotes{background:linear-gradient(135deg,#3d7aed,#2050b8);}
+.r-sound{background:linear-gradient(135deg,#00c896,#009a72);}
+.r-trivia{background:linear-gradient(135deg,#e84040,#b01818);}
+.r-secret{background:linear-gradient(135deg,#a040d0,#6a18a0);}
+.r-exit{background:linear-gradient(135deg,#2e3a45,#1a2530);}
+.secret-hint{text-align:center;color:var(--rose);font-size:.78rem;font-weight:700;margin:6px 0;}
+.btn-restart{width:100%;padding:.8rem;background:transparent;color:var(--mist);border:1px solid rgba(107,100,128,.2);border-radius:8px;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;margin-top:4px;transition:all .2s;}
+.btn-restart:hover{border-color:var(--rose);color:var(--rose);}
+
+/* ── ROOM SHARED ── */
+.room-wrap{background:#fff;border-radius:20px;padding:2rem 1.8rem;max-width:560px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.09);margin:0 auto;animation:cardIn .5s ease both;}
+.room-header{text-align:center;margin-bottom:1.5rem;}
+.room-icon-circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto .8rem;}
+.room-wrap h2{font-family:'Lato',sans-serif;font-size:1.35rem;font-weight:700;color:#1a1a2e;}
+.btn-back{width:100%;padding:.9rem;background:linear-gradient(135deg,#f472b6,#a855f7);color:#fff;border:none;border-radius:12px;font-family:'Lato',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:1.4rem;letter-spacing:.5px;transition:opacity .2s;}
+.btn-back:hover{opacity:.88;}
+
+/* ── MAP ROOM ── */
+.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:linear-gradient(135deg,#e8f4fd,#dbeafe);border-radius:16px;padding:1.2rem;}
+.map-cell{background:#fff;border-radius:10px;padding:.7rem .4rem;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.65rem;font-weight:700;color:#555;border:2px solid transparent;transition:all .3s;}
+.map-cell.visited-cell{border-color:#22c55e;color:#15803d;}
+.map-cell.locked-cell{opacity:.45;}
+.map-cell.current-cell{border-color:#3b82f6;background:#eff6ff;}
+.mc-icon{font-size:1.2rem;}
+.museum-guide{background:#f0f8ff;border-radius:12px;padding:1rem 1.2rem;margin-top:1.2rem;text-align:left;border:1px solid #dbeafe;}
+.guide-title{font-size:.85rem;font-weight:700;color:#1e40af;display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem;}
+.museum-guide p{font-size:.82rem;color:#4b5563;line-height:1.65;}
+
+/* ── BEGINNING ── */
+.photo-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.photo-card{background:#fdf2f8;border-radius:12px;overflow:hidden;border:1px solid #fce7f3;}
+.photo-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;}
+.photo-placeholder-box{aspect-ratio:4/3;background:linear-gradient(135deg,#f9a8d4,#c084fc);display:flex;align-items:center;justify-content:center;font-size:2rem;}
+.photo-story-box{display:flex;align-items:center;padding:1rem;background:#fdf4ff;border:1px solid #e9d5ff;border-radius:12px;}
+.story-text{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:#6b21a8;font-style:italic;line-height:1.75;text-align:center;}
+.photo-label{padding:.35rem .8rem .6rem;font-size:.68rem;font-weight:700;color:#be185d;letter-spacing:.5px;text-align:center;}
+.photo-wide{background:#fdf2f8;border-radius:12px;overflow:hidden;border:1px solid #fce7f3;}
+.photo-wide-img{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;}
+.photo-placeholder-wide{aspect-ratio:16/7;background:linear-gradient(135deg,#fbcfe8,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+
+/* ── MEMORIES room — video atas, 2 foto bawah ── */
+.mem-video-top { margin-bottom: 12px; }
+.mem-video-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg,#7c3aed,#4c1d95);
 }
-html,body{width:100%;min-height:100vh;background:var(--dark);font-family:'Lato',sans-serif;overflow-x:hidden;color:var(--cream);}
+.mem-video-inner iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; border: 0;
+}
+.mem-video-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: rgba(255,255,255,.7);
+}
 
-/* PARTICLES */
-#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.p{position:absolute;border-radius:50% 0 50% 0;opacity:0;animation:pfall linear infinite;}
-@keyframes pfall{0%{transform:translateY(-30px) rotate(0deg);opacity:0;}10%{opacity:.5;}90%{opacity:.2;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+/* 2 foto berdampingan */
+.mem-photos-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.mem-photo-col { display: flex; flex-direction: column; gap: 0; }
+.mem-photo-box {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f1f1f1;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid #e5e7eb;
+}
+/* Foto CONTAIN agar tidak terpotong, dengan background putih bersih */
+.mem-photo-box img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  background: #fff;
+  display: block;
+}
+.mem-photo-placeholder {
+  font-size: 2rem; color: #9ca3af;
+}
+.mem-label {
+  padding: .35rem .2rem .6rem;
+  font-size: .72rem; font-weight: 700;
+  color: #374151; text-align: center;
+}
 
-/* SPLASH */
-#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#2d0d0d 0%,#0f0505 100%);transition:opacity 1s ease,visibility 1s ease;}
-#splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
-.splash-rose{font-size:5rem;animation:roseFloat 2s ease-in-out infinite,roseFadeIn 1.5s ease forwards;display:block;text-align:center;}
-@keyframes roseFadeIn{from{opacity:0;transform:scale(.6);}to{opacity:1;transform:scale(1);}}
-@keyframes roseFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-.splash-title{font-family:'Cinzel',serif;font-size:clamp(2rem,6vw,3.5rem);color:var(--gold-light);letter-spacing:.12em;text-align:center;margin-top:1rem;animation:fadeUp 1s ease .5s both;text-shadow:0 0 40px rgba(212,169,106,.4);}
-.splash-name{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3rem);color:var(--gold-light);letter-spacing:.15em;text-align:center;margin:.3rem 0;font-style:normal;}
-.splash-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,3vw,1.3rem);color:var(--rose-light);letter-spacing:.2em;text-align:center;animation:fadeUp 1s ease .8s both;}
-.splash-btn{margin-top:2.5rem;padding:.8rem 2.5rem;background:transparent;border:1px solid rgba(192,57,43,.5);color:var(--gold-light);font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.2em;cursor:pointer;border-radius:2px;animation:fadeUp 1s ease 1.2s both,glowPulse 2s ease 1.5s infinite;transition:all .3s;}
-.splash-btn:hover{background:rgba(192,57,43,.2);border-color:var(--rose);box-shadow:0 0 20px rgba(192,57,43,.3);}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 10px rgba(192,57,43,.2);}50%{box-shadow:0 0 25px rgba(192,57,43,.5);}}
-.splash-candles{display:flex;justify-content:center;gap:1.2rem;margin:1.5rem 0;}
+/* ── FOTO di ruang Awal Kita & Secret — contain agar tidak terpotong ── */
+.photo-card .photo-fit-wrap {
+  width: 100%; aspect-ratio: 4/3;
+  overflow: hidden; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 0;
+}
+.photo-card .photo-fit-wrap img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.photo-wide .photo-fit-wrap-wide {
+  width: 100%; aspect-ratio: 16/7;
+  overflow: hidden; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-wide .photo-fit-wrap-wide img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* Secret room photo — contain */
+.secret-photo-frame img {
+  width: 100%; display: block;
+  object-fit: contain;
+  background: #fff;
+  aspect-ratio: 3/4;
+}
 
-/* CANDLES */
-.candle{display:flex;flex-direction:column;align-items:center;gap:1px;}
-.flame{width:8px;height:16px;background:radial-gradient(ellipse at 50% 80%,#ffd700,#ff8c00 50%,rgba(255,60,0,.2));border-radius:50% 50% 40% 40%;box-shadow:0 0 10px rgba(255,180,0,.7);animation:flicker .7s ease-in-out infinite alternate;}
-@keyframes flicker{0%{transform:scaleX(1) scaleY(1) rotate(-2deg);opacity:1;}100%{transform:scaleX(.8) scaleY(1.15) rotate(2deg);opacity:.85;}}
-.candle-body{width:10px;height:30px;background:linear-gradient(180deg,#f5e6c8,#c9a87a);border-radius:2px;}
+/* ── LIKES ── */
+.likes-list{display:flex;flex-direction:column;gap:10px;}
+.like-item{display:flex;align-items:center;justify-content:space-between;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:.85rem 1rem;font-size:.9rem;font-weight:600;color:#92400e;}
+.heart-icon{color:#f43f5e;font-size:1.1rem;}
 
-/* APP */
-#app{display:none;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
-#app.show{display:flex;}
+/* ── DIFFICULT ── */
+.exhibit-list{display:flex;flex-direction:column;gap:10px;}
+.exhibit-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:.9rem 1rem;text-align:left;display:flex;gap:.8rem;}
+.ex-icon{color:#9ca3af;font-size:1.2rem;margin-top:.1rem;flex-shrink:0;}
+.exhibit-card h4{font-size:.87rem;font-weight:700;color:#1f2937;margin-bottom:.2rem;}
+.exhibit-card p{font-size:.8rem;color:#6b7280;line-height:1.6;}
+.diff-quote{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:#6b7280;font-size:.9rem;margin-top:1rem;}
 
-/* HEADER */
-.header{position:relative;text-align:center;padding:3rem 1rem 2rem;background:radial-gradient(ellipse at top,#2d0d0d 0%,#0f0505 60%);overflow:hidden;}
-.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,57,43,.5),transparent);}
-.header-rose{font-size:3rem;animation:roseFloat 3s ease-in-out infinite;display:block;margin-bottom:.5rem;}
-.header-name{font-family:'Cinzel',serif;font-size:clamp(2.2rem,5vw,3.5rem);color:var(--gold-light);letter-spacing:.1em;text-shadow:0 0 40px rgba(212,169,106,.4);}
-.header-hbd{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.9rem,2.5vw,1.2rem);color:var(--rose-light);letter-spacing:.25em;text-transform:uppercase;margin-top:.25rem;}
-.header-candles{display:flex;justify-content:center;gap:1rem;margin-top:1.2rem;}
+/* ── ACHIEVEMENT ── */
+.achiev-box{background:#fffbeb;border-radius:16px;padding:1.4rem;text-align:center;}
+.achiev-trophy{font-size:2.2rem;margin-bottom:.4rem;display:block;}
+.achiev-box h3{font-size:1rem;font-weight:700;color:#92400e;margin-bottom:1rem;}
+.achiev-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.2rem;}
+.achiev-item{background:#fff;border-radius:10px;padding:.7rem 1rem;font-size:.85rem;color:#1f2937;display:flex;align-items:center;gap:.7rem;border:1px solid #fde68a;text-align:left;}
+.check-icon{color:#16a34a;font-size:1rem;flex-shrink:0;}
+.progress-wrap{background:#fff;border-radius:10px;padding:.8rem 1rem;border:1px solid #fde68a;}
+.progress-label{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;color:#92400e;margin-bottom:.4rem;}
+.progress-bar{height:10px;background:#fde68a;border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#fbbf24,#f59e0b);border-radius:99px;width:0;transition:width 1.2s ease;}
+.progress-sub{font-size:.75rem;color:#b45309;margin-top:.4rem;text-align:center;}
 
-/* NAV */
-.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(10,3,3,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(192,57,43,.2);padding:.6rem .5rem;overflow-x:auto;scrollbar-width:none;}
-.nav-wrap::-webkit-scrollbar{display:none;}
-.nav{display:flex;gap:.4rem;width:max-content;margin:0 auto;}
-.nav-btn{padding:.5rem .9rem;background:transparent;border:1px solid rgba(192,57,43,.25);color:rgba(212,169,106,.7);font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border-radius:2px;white-space:nowrap;transition:all .25s;}
-.nav-btn:hover{background:rgba(192,57,43,.15);color:var(--gold-light);border-color:rgba(192,57,43,.5);}
-.nav-btn.active{background:rgba(192,57,43,.25);color:var(--gold-light);border-color:var(--rose);}
+/* ── FUTURE ── */
+.future-box{background:linear-gradient(135deg,#f0fdfa,#e6fffa);border-radius:16px;padding:1.4rem;border:1px solid #a7f3d0;text-align:center;}
+.future-icon{font-size:2rem;margin-bottom:.5rem;display:block;}
+.future-box h3{font-size:1rem;font-weight:700;color:#065f46;margin-bottom:1rem;}
+.future-paras{text-align:left;display:flex;flex-direction:column;gap:.7rem;}
+.future-paras p{font-size:.85rem;color:#374151;line-height:1.7;}
+.future-tagline{font-size:.85rem;font-weight:700;color:#0d9488;margin-top:.8rem;text-align:center;}
 
-/* PAGES */
-.page{display:none;padding:2.5rem 1.5rem 4rem;max-width:680px;margin:0 auto;width:100%;animation:pageIn .6s ease;}
-.page.active{display:block;}
-@keyframes pageIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+/* ── QUOTES ── */
+.quotes-sub{font-size:.8rem;color:#6b7280;text-align:center;margin-bottom:1rem;}
+.quote-list{display:flex;flex-direction:column;gap:10px;}
+.quote-card{background:#eef2ff;border-radius:12px;padding:1rem 1.1rem;text-align:left;border:1px solid #c7d2fe;}
+.quote-mark{font-size:1.2rem;color:#818cf8;margin-bottom:.3rem;display:block;}
+.qtext{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:#312e81;line-height:1.65;}
+.qauthor{font-size:.72rem;color:#6366f1;text-align:right;margin-top:.4rem;font-weight:700;}
 
-/* SECTION TITLE */
-.sec-title{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold-light);letter-spacing:.12em;text-align:center;margin-bottom:.4rem;}
-.sec-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--rose-light);text-align:center;margin-bottom:2rem;letter-spacing:.1em;}
-.divider{display:flex;align-items:center;gap:10px;margin:1.5rem 0;}
-.dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(192,57,43,.5),transparent);}
-.dd{width:5px;height:5px;background:rgba(192,57,43,.7);transform:rotate(45deg);}
+/* ── SOUNDTRACK ── */
+.sound-sub{font-size:.8rem;color:#6b7280;text-align:center;margin-bottom:1rem;}
+.track-list{display:flex;flex-direction:column;gap:10px;}
+.track-item{display:flex;align-items:center;gap:.9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;text-decoration:none;}
+.track-thumb{width:40px;height:40px;background:linear-gradient(135deg,#34d399,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;flex-shrink:0;}
+.track-info{text-align:left;}
+.track-info strong{font-size:.88rem;color:#065f46;display:block;}
+.track-info span{font-size:.78rem;color:#6b7280;}
 
-/* CARD */
-.card{background:linear-gradient(145deg,rgba(26,8,8,.9),rgba(42,12,12,.8));border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.5rem;margin-bottom:1.2rem;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
-.card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(192,57,43,.15);}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,169,106,.3),transparent);}
-.card-icon{font-size:1.8rem;margin-bottom:.7rem;display:block;text-align:center;}
-.card-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);letter-spacing:.15em;text-align:center;margin-bottom:.8rem;text-transform:uppercase;}
-.card-body{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(245,230,211,.8);line-height:1.9;text-align:center;font-style:italic;}
+/* ── TRIVIA ── */
+.trivia-sub{font-size:.8rem;color:#6b7280;text-align:center;margin-bottom:1rem;}
+.trivia-score{font-size:.82rem;font-weight:700;text-align:center;color:var(--rose);margin-bottom:1rem;min-height:1.2rem;}
+.question-card{background:#fff7ed;border-radius:12px;padding:1rem;margin-bottom:10px;border:1px solid #fed7aa;}
+.q-head{display:flex;align-items:flex-start;gap:.6rem;font-size:.87rem;font-weight:700;color:#9a3412;margin-bottom:.8rem;}
+.q-brain{font-size:1.1rem;flex-shrink:0;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.choice-btn{padding:.55rem;background:#fff;border:1px solid #fed7aa;border-radius:8px;font-size:.78rem;font-weight:600;color:#374151;cursor:pointer;transition:all .2s;}
+.choice-btn:hover:not(:disabled){background:#ffedd5;border-color:#fb923c;}
+.choice-btn.correct{background:#dcfce7;border-color:#22c55e;color:#15803d;}
+.choice-btn.wrong{background:#fee2e2;border-color:#ef4444;color:#b91c1c;}
+.choice-btn:disabled{cursor:default;}
 
-/* TIMELINE */
-.timeline{position:relative;padding-left:2rem;}
-.timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(192,57,43,.5),transparent);}
-.tl-item{position:relative;padding-left:1.5rem;margin-bottom:1.8rem;}
-.tl-dot{position:absolute;left:-.5rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:var(--rose-dark);border:2px solid var(--rose);box-shadow:0 0 8px rgba(192,57,43,.5);}
-.tl-date{font-family:'Cinzel',serif;font-size:.7rem;color:var(--rose-light);letter-spacing:.15em;margin-bottom:.3rem;}
-.tl-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,230,211,.85);line-height:1.8;}
+/* ── SECRET ── */
+.secret-wrap{background:linear-gradient(135deg,#faf5ff,#ede9fe);border-radius:16px;padding:1.4rem;border:1px solid #ddd6fe;text-align:center;}
+.secret-lock{font-size:2rem;color:#7c3aed;margin-bottom:.5rem;display:block;}
+.secret-photo-frame{background:#fff;border-radius:12px;overflow:hidden;margin:1rem auto;max-width:300px;border:2px solid #e9d5ff;}
+.secret-photo-frame img{width:100%;display:block;object-fit:cover;}
+.secret-ph{aspect-ratio:3/4;background:linear-gradient(135deg,#e879f9,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.secret-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:#6d28d9;line-height:1.7;margin:1rem 0;}
+.secret-heart{font-size:1.6rem;display:block;margin:.4rem 0;}
+.secret-you{font-size:1.1rem;font-weight:700;color:#7c3aed;}
 
-/* LIKES GRID */
-.likes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;}
-.like-card{background:rgba(26,8,8,.8);border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.2rem .8rem;text-align:center;transition:all .3s;cursor:default;}
-.like-card:hover{background:rgba(42,12,12,.9);border-color:rgba(192,57,43,.5);transform:scale(1.05);}
-.like-emoji{font-size:2rem;display:block;margin-bottom:.5rem;}
-.like-label{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--gold-light);font-style:italic;}
+/* ── EXIT / FINAL ── */
+.final-wrap{text-align:center;}
+.final-heart{font-size:2.5rem;display:block;margin-bottom:.5rem;animation:sparkAnim 2s ease-in-out infinite;}
+.final-wrap h2{font-family:'Lato',sans-serif;font-size:1.3rem;font-weight:700;color:#7c3aed;margin-bottom:1rem;}
+.video-embed-wrap{border-radius:12px;overflow:hidden;max-width:420px;width:100%;margin:0 auto 1rem;aspect-ratio:16/9;background:#1a1a2e;position:relative;}
+.video-embed-wrap iframe{width:100%;height:100%;border:0;position:absolute;inset:0;}
+/* mem video card override */
+#mem-video-card .mem-thumb{padding:0;overflow:hidden;}
+#mem-video-card iframe{width:100%;height:100%;border:0;display:block;}
+.video-placeholder-box{background:linear-gradient(135deg,#4c1d95,#7c3aed);width:100%;height:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:absolute;inset:0;}
+.final-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.92rem;color:#6b7280;line-height:1.7;max-width:380px;margin:0 auto 1rem;}
+.btn-close-final{padding:.7rem 2rem;background:linear-gradient(135deg,#f472b6,#a855f7);color:#fff;border:none;border-radius:10px;font-family:'Lato',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.btn-close-final:hover{opacity:.85;}
 
-/* QUOTES */
-.quote-box{position:relative;background:linear-gradient(145deg,rgba(26,8,8,.95),rgba(42,12,12,.9));border:1px solid rgba(212,169,106,.2);border-radius:4px;padding:2.5rem 2rem;text-align:center;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.quote-mark{font-size:3rem;color:rgba(192,57,43,.3);font-family:'Cinzel',serif;line-height:1;margin-bottom:.5rem;}
-.quote-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--cream);line-height:1.9;margin-bottom:1rem;transition:opacity .4s;}
-.quote-nav{display:flex;gap:.8rem;justify-content:center;margin-top:1.2rem;flex-wrap:wrap;}
-.q-btn{width:8px;height:8px;border-radius:50%;background:rgba(192,57,43,.3);border:1px solid rgba(192,57,43,.5);cursor:pointer;transition:all .3s;padding:0;}
-.q-btn.active{background:var(--rose);box-shadow:0 0 8px rgba(192,57,43,.5);}
+/* ── CONFETTI ── */
+.confetti-piece{position:fixed;top:-20px;border-radius:2px;animation:confettiFall linear forwards;z-index:200;pointer-events:none;}
 
-/* SONG */
-.song-card{background:linear-gradient(135deg,rgba(26,8,8,.95),rgba(60,15,15,.9));border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.5rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:1rem;transition:all .3s;}
-.song-card:hover{border-color:rgba(192,57,43,.5);transform:translateX(4px);}
-.song-icon{font-size:2rem;flex-shrink:0;}
-.song-info{flex:1;}
-.song-title{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:.3rem;}
-.song-artist{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--rose-light);}
-.song-note{font-family:'Lato',sans-serif;font-size:.8rem;color:rgba(245,230,211,.5);margin-top:.3rem;}
-
-/* QUIZ */
-.quiz-card{background:rgba(26,8,8,.85);border:1px solid rgba(192,57,43,.2);border-radius:4px;padding:1.8rem;margin-bottom:1.2rem;}
-.quiz-q{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold-light);font-style:italic;margin-bottom:1rem;line-height:1.6;}
-.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
-@media(max-width:400px){.quiz-options{grid-template-columns:1fr;}}
-.q-opt{padding:.7rem .8rem;background:transparent;border:1px solid rgba(192,57,43,.25);color:rgba(245,230,211,.75);font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;cursor:pointer;border-radius:2px;transition:all .25s;text-align:left;}
-.q-opt:hover:not(:disabled){background:rgba(192,57,43,.15);border-color:rgba(192,57,43,.5);color:var(--cream);}
-.q-opt.correct{background:rgba(20,80,40,.3);border-color:#2ecc71;color:#a8e6c0;}
-.q-opt.wrong{background:rgba(80,20,20,.3);border-color:rgba(192,57,43,.6);color:var(--rose-light);}
-.quiz-result{margin-top:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold-light);text-align:center;min-height:1.5rem;}
-
-/* ACHIEVEMENT */
-.achievement-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem;background:rgba(26,8,8,.8);border:1px solid rgba(192,57,43,.2);border-radius:4px;margin-bottom:.8rem;transition:all .3s;}
-.achievement-item:hover{border-color:rgba(212,169,106,.3);transform:translateX(4px);}
-.ach-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem;}
-.ach-label{font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.25rem;}
-.ach-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,230,211,.85);line-height:1.7;}
-
-/* HOPE */
-.hope-item{text-align:center;padding:1.5rem 1rem;background:rgba(26,8,8,.8);border:1px solid rgba(192,57,43,.2);border-radius:4px;margin-bottom:.8rem;transition:all .3s;}
-.hope-item:hover{border-color:rgba(212,169,106,.25);box-shadow:0 4px 20px rgba(192,57,43,.1);}
-.hope-emoji{font-size:1.8rem;display:block;margin-bottom:.6rem;}
-.hope-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(245,230,211,.85);line-height:1.8;}
-
-/* DIFFICULT */
-.difficult-card{border-left:3px solid var(--rose-dark);background:rgba(20,5,5,.7);padding:1.2rem 1.2rem 1.2rem 1.5rem;margin-bottom:1rem;border-radius:0 4px 4px 0;transition:all .3s;}
-.difficult-card:hover{border-left-color:var(--rose);transform:translateX(3px);}
-.diff-title{font-family:'Cinzel',serif;font-size:.8rem;color:var(--rose-light);letter-spacing:.12em;margin-bottom:.4rem;}
-.diff-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,230,211,.8);line-height:1.8;}
-
-/* SCORE */
-.score-display{text-align:center;margin-top:2rem;padding:1.5rem;background:rgba(26,8,8,.9);border:1px solid rgba(212,169,106,.2);border-radius:4px;}
-.score-num{font-family:'Cinzel',serif;font-size:2.5rem;color:var(--gold-light);display:block;}
-.score-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--rose-light);}
-
-/* BUTTON */
-.btn-outline{background:transparent;border:1px solid rgba(192,57,43,.3);color:var(--gold);padding:.55rem 1.5rem;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;cursor:pointer;border-radius:2px;transition:all .3s;display:inline-block;margin-top:1rem;}
-.btn-outline:hover{background:rgba(192,57,43,.2);border-color:rgba(192,57,43,.6);}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-
-/* RESPONSIVE */
-@media(max-width:500px){
-  .nav-btn{font-size:.6rem;padding:.45rem .7rem;}
-  .splash-title{font-size:1.8rem;}
-  .header-name{font-size:2rem;}
-  .quote-text{font-size:1.1rem;}
-  .likes-grid{grid-template-columns:repeat(3,1fr);}
+@media(max-width:520px){
+  .rooms-grid{grid-template-columns:repeat(2,1fr);}
+  .map-grid{grid-template-columns:repeat(3,1fr);}
+  .photo-2col,.choices,.field-row{grid-template-columns:1fr;}
+  .reveal-hb{font-size:2.1rem;}
+  .setup-body{padding:1.4rem 1.2rem;}
+  .setup-header{padding:1.5rem 1.2rem 1.2rem;}
+  .setup-footer{padding:1rem 1.2rem 1.5rem;}
 }
 </style>
 </head>
 <body>
+<canvas id="starfield"></canvas>
 
-<div id="particles"></div>
+<!-- ████ SETUP PAGE ████ -->
+<div class="page" id="page-setup">
+<div class="setup-card">
+  <div class="setup-header">
+    <div style="font-size:1.8rem;margin-bottom:.3rem;">✦</div>
+    <h1>Buat Kartu Ulang Tahun</h1>
+    <p>Isi semua konten di bawah, lalu bagikan linknya</p>
+  </div>
+  <div class="setup-body">
 
-<!-- SPLASH -->
-<div id="splash">
-  <div style="text-align:center;padding:2rem;max-width:500px;width:100%;">
-    <span class="splash-rose">🌹</span>
-    <div class="splash-title">Happy Birthday</div>
-    <div class="splash-name">Berli</div>
-    <div class="splash-sub" style="margin-bottom:.5rem;">Sebuah hadiah kecil yang penuh cinta</div>
-    <div class="splash-candles">
-      <div class="candle"><div class="flame"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-delay:.2s;animation-duration:.6s"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-delay:.4s;animation-duration:.9s"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-delay:.1s;animation-duration:.8s"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-delay:.3s;animation-duration:.7s"></div><div class="candle-body"></div></div>
+    <!-- IDENTITAS -->
+    <div class="setup-section">
+      <div class="setup-section-title">👤 Identitas</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Nama Penerima (pasanganmu)</label>
+          <input class="setup-input" id="s-name" type="text" placeholder="cth: Gifari" maxlength="40">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Nama Pengirim (kamu)</label>
+          <input class="setup-input" id="s-sender" type="text" placeholder="cth: Sayang" maxlength="40">
+        </div>
+      </div>
     </div>
-    <button class="splash-btn" onclick="enterApp()">✦ Buka Hadiah ✦</button>
+
+    <!-- FOTO -->
+    <div class="setup-section">
+      <div class="setup-section-title">📸 Foto (URL Google Drive / Google Photos / Imgur)</div>
+      <div class="tip-box"><strong>💡 Cara mendapatkan URL foto:</strong>Upload foto ke Google Drive → klik kanan → "Bagikan" → "Siapa saja yang punya link" → salin link, lalu ubah format: <code>drive.google.com/file/d/FILE_ID/view</code> → ganti jadi <code>drive.google.com/uc?id=FILE_ID</code></div>
+      <div class="photo-grid-inputs" style="margin-top:.8rem;">
+        <div class="field-group">
+          <label class="field-label">Foto Kenalan Pertama</label>
+          <input class="setup-input" id="s-photo1" type="url" placeholder="https://drive.google.com/uc?id=...">
+          <span class="field-hint">Foto cerita pertama ketemu</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Foto Pertama Bersama</label>
+          <input class="setup-input" id="s-photo2" type="url" placeholder="https://drive.google.com/uc?id=...">
+          <span class="field-hint">Foto berdua paling berkesan</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Kenangan Foto 1</label>
+          <input class="setup-input" id="s-photo3" type="url" placeholder="https://drive.google.com/uc?id=...">
+          <span class="field-hint">Momen yang diabadikan</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Kenangan Foto 2</label>
+          <input class="setup-input" id="s-photo4" type="url" placeholder="https://drive.google.com/uc?id=...">
+          <span class="field-hint">Momen spesial lainnya</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Foto Secret Room</label>
+          <input class="setup-input" id="s-photo5" type="url" placeholder="https://drive.google.com/uc?id=...">
+          <span class="field-hint">Foto paling spesial berdua</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="setup-section">
+      <div class="setup-section-title">🎬 Video (YouTube)</div>
+      <div class="tip-box"><strong>💡 Cara mendapatkan YouTube Embed ID:</strong>Buka YouTube → salin link video → ambil bagian setelah <code>v=</code>. Contoh: <code>youtube.com/watch?v=<strong>dQw4w9WgXcQ</strong></code> → ID-nya adalah <code>dQw4w9WgXcQ</code></div>
+      <div class="field-row" style="margin-top:.8rem;">
+        <div class="field-group">
+          <label class="field-label">Video Kenangan (ID YouTube)</label>
+          <input class="setup-input" id="s-video1" type="text" placeholder="cth: dQw4w9WgXcQ" maxlength="20">
+          <span class="field-hint">Tampil di halaman Memories</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pesan Video Akhir (ID YouTube)</label>
+          <input class="setup-input" id="s-video2" type="text" placeholder="cth: dQw4w9WgXcQ" maxlength="20">
+          <span class="field-hint">Tampil di halaman Exit / Pesan Terakhir</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAGU -->
+    <div class="setup-section">
+      <div class="setup-section-title">🎵 Lagu (Spotify / YouTube)</div>
+      <div class="tip-box"><strong>💡 Cara mendapatkan link Spotify:</strong>Buka lagu di Spotify → klik ••• → "Bagikan" → "Salin link lagu". Atau bisa juga pakai link YouTube biasa.</div>
+      <div style="margin-top:.8rem;">
+        <div class="field-group">
+          <label class="field-label">Lagu 1 — Judul</label>
+          <input class="setup-input" id="s-song1-title" type="text" placeholder="cth: Lagu yang selalu mengingatkanku padamu" maxlength="80">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lagu 1 — Deskripsi</label>
+          <input class="setup-input" id="s-song1-desc" type="text" placeholder="cth: Melodi yang terputar setiap kali aku merindukanmu" maxlength="120">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lagu 1 — Link (Spotify/YouTube)</label>
+          <input class="setup-input" id="s-song1-url" type="url" placeholder="https://open.spotify.com/track/...">
+        </div>
+        <hr style="border:none;border-top:1px dashed rgba(200,151,42,.2);margin:.8rem 0;">
+        <div class="field-group">
+          <label class="field-label">Lagu 2 — Judul</label>
+          <input class="setup-input" id="s-song2-title" type="text" placeholder="cth: Lagu yang cocok untuk kita berdua" maxlength="80">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lagu 2 — Deskripsi</label>
+          <input class="setup-input" id="s-song2-desc" type="text" placeholder="cth: Menggambarkan perjalanan kita dengan sempurna" maxlength="120">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lagu 2 — Link</label>
+          <input class="setup-input" id="s-song2-url" type="url" placeholder="https://open.spotify.com/track/...">
+        </div>
+        <hr style="border:none;border-top:1px dashed rgba(200,151,42,.2);margin:.8rem 0;">
+        <div class="field-group">
+          <label class="field-label">Lagu 3 — Judul</label>
+          <input class="setup-input" id="s-song3-title" type="text" placeholder="cth: Artis favoritmu" maxlength="80">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lagu 3 — Deskripsi</label>
+          <input class="setup-input" id="s-song3-desc" type="text" placeholder="cth: Karena aku tahu betapa berartinya musik ini untukmu" maxlength="120">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lagu 3 — Link</label>
+          <input class="setup-input" id="s-song3-url" type="url" placeholder="https://open.spotify.com/track/...">
+        </div>
+      </div>
+    </div>
+
+    <!-- TRIVIA -->
+    <div class="setup-section">
+      <div class="setup-section-title">🧠 Pertanyaan Trivia (3 soal)</div>
+      <div id="trivia-setup">
+        <div class="trivia-q-setup" data-qi="0">
+          <div class="field-group"><label class="field-label">Pertanyaan 1</label><input class="setup-input tq-question" type="text" placeholder="cth: Film pertama yang kita tonton bersama?" maxlength="100"></div>
+          <div class="field-row">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan A" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan B" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan C" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan D" maxlength="40">
+          </div>
+          <div class="field-group"><label class="field-label">Jawaban benar (A/B/C/D)</label><input class="setup-input tq-answer" type="text" placeholder="cth: B" maxlength="1" style="text-transform:uppercase;"></div>
+        </div>
+        <hr style="border:none;border-top:1px dashed rgba(200,151,42,.2);margin:.8rem 0;">
+        <div class="trivia-q-setup" data-qi="1">
+          <div class="field-group"><label class="field-label">Pertanyaan 2</label><input class="setup-input tq-question" type="text" placeholder="cth: Warna favorit saya?" maxlength="100"></div>
+          <div class="field-row">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan A" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan B" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan C" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan D" maxlength="40">
+          </div>
+          <div class="field-group"><label class="field-label">Jawaban benar (A/B/C/D)</label><input class="setup-input tq-answer" type="text" placeholder="cth: C" maxlength="1" style="text-transform:uppercase;"></div>
+        </div>
+        <hr style="border:none;border-top:1px dashed rgba(200,151,42,.2);margin:.8rem 0;">
+        <div class="trivia-q-setup" data-qi="2">
+          <div class="field-group"><label class="field-label">Pertanyaan 3</label><input class="setup-input tq-question" type="text" placeholder="cth: Di mana kita pertama kali bertemu?" maxlength="100"></div>
+          <div class="field-row">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan A" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan B" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan C" maxlength="40">
+            <input class="setup-input tq-opt" type="text" placeholder="Pilihan D" maxlength="40">
+          </div>
+          <div class="field-group"><label class="field-label">Jawaban benar (A/B/C/D)</label><input class="setup-input tq-answer" type="text" placeholder="cth: A" maxlength="1" style="text-transform:uppercase;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HAL YANG DISUKAI -->
+    <div class="setup-section">
+      <div class="setup-section-title">😊 Hal yang Kamu Suka dari Dia (5 item)</div>
+      <div id="likes-setup">
+        <input class="setup-input" id="s-like1" type="text" placeholder="cth: Senyumnya yang selalu bikin hari jadi cerah" maxlength="80" style="margin-bottom:.6rem;">
+        <input class="setup-input" id="s-like2" type="text" placeholder="cth: Kesabarannya yang luar biasa" maxlength="80" style="margin-bottom:.6rem;">
+        <input class="setup-input" id="s-like3" type="text" placeholder="cth: Suaranya yang menenangkan" maxlength="80" style="margin-bottom:.6rem;">
+        <input class="setup-input" id="s-like4" type="text" placeholder="cth: Cara dia peduli pada orang-orang di sekitarnya" maxlength="80" style="margin-bottom:.6rem;">
+        <input class="setup-input" id="s-like5" type="text" placeholder="cth: Cara dia tetap ada untukku di saat susah sekalipun" maxlength="80">
+      </div>
+    </div>
+
+  </div><!-- end setup-body -->
+  <div class="setup-footer">
+    <p class="setup-err" id="setup-err">✦ Isi minimal nama penerima dan pengirim dulu ya</p>
+    <button class="btn-generate" onclick="generateLink()">✦ &nbsp;Buat Link Sekarang &nbsp;→</button>
+    <div class="link-result" id="link-result">
+      <p style="font-size:.72rem;color:var(--mist);margin-bottom:.5rem;font-style:italic;">Salin link di bawah ini dan kirimkan ke pasanganmu 💌</p>
+      <div class="link-url" id="link-url-display">—</div>
+      <div class="link-actions">
+        <button class="btn-copy" onclick="copyLink()">Salin Link</button>
+        <button class="btn-preview" onclick="previewLink()">Preview →</button>
+      </div>
+      <p class="copy-confirm" id="copy-confirm">✦ Link berhasil disalin!</p>
+      <div class="tip-box" style="margin-top:.8rem;">
+        <strong>📌 Cara upload ke GitHub Pages:</strong>
+        Simpan file ini sebagai <code>index.html</code> → Upload ke repository GitHub → Aktifkan GitHub Pages di Settings → Bagikan URL <code>username.github.io/nama-repo?t=...&amp;s=...</code> ke pasanganmu.
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ████ ENVELOPE ████ -->
+<div class="page" id="page-mystery">
+  <p class="mystery-eyebrow">Ada sesuatu untukmu</p>
+  <div class="envelope-wrap" id="envelope" onclick="openEnvelope()">
+    <div class="env-body"><div class="env-flap"></div><div class="env-seal">✦</div><div class="env-letter-peek"></div></div>
+  </div>
+  <p class="mystery-title">Sebuah pesan rahasia menantimu</p>
+  <p class="mystery-sub">Klik untuk membuka</p>
+  <button class="btn-ghost" onclick="openEnvelope()">Buka Amplop</button>
+</div>
+
+<!-- ████ RIDDLE ████ -->
+<div class="page" id="page-riddle">
+  <div class="letter-card">
+    <span class="letter-ornament">✦</span>
+    <p class="letter-eyebrow">Pesan Tersegel · Verifikasi Identitas</p>
+    <div class="letter-divider"></div>
+    <p class="letter-body">Pesan ini hanya bisa dibaca oleh<br><strong>satu orang tertentu.</strong><br><br>Untuk memastikan pesan ini<br>sampai ke tangan yang tepat —<br><strong>siapakah namamu?</strong></p>
+    <div class="letter-divider"></div>
+    <label class="verify-label" for="verify-input">Masukkan namamu</label>
+    <input class="verify-input" id="verify-input" type="text" placeholder="Nama kamu…" maxlength="40" autocomplete="off">
+    <span class="input-hint">Tepat seperti yang orang-orang memanggilmu</span>
+    <p class="verify-err" id="verify-err">✦ Tuliskan namamu dulu</p>
+    <button class="btn-dark" onclick="submitName()">Verifikasi &nbsp;→</button>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="app">
+<!-- ████ LOADING ████ -->
+<div class="page" id="page-loading">
+  <p class="loading-text">Memverifikasi identitas<span>...</span></p>
+  <p class="loading-sub">Mohon tunggu sebentar</p>
+</div>
 
-  <div class="header">
-    <span class="header-rose">🌹</span>
-    <div class="header-name">Berli</div>
-    <div class="header-hbd">✦ Selamat Ulang Tahun ✦</div>
-    <div class="header-candles">
-      <div class="candle"><div class="flame"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-duration:.6s"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-duration:.85s"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-duration:.65s"></div><div class="candle-body"></div></div>
-      <div class="candle"><div class="flame" style="animation-duration:.9s"></div><div class="candle-body"></div></div>
+<!-- ████ REVEAL ████ -->
+<div class="page" id="page-reveal">
+  <div class="reveal-card">
+    <span class="reveal-tag">✦ Kartu Ulang Tahun</span>
+    <span class="reveal-sparkle">✨</span>
+    <div class="reveal-hb">Selamat Ulang Tahun</div>
+    <div class="reveal-name" id="reveal-name">Sayang!</div>
+    <div class="reveal-divider"></div>
+    <p class="reveal-wish" id="reveal-wish"></p>
+    <div class="reveal-emoji">🎂 🎊 💖</div>
+    <button class="btn-museum" onclick="goToMuseum()">Masuk ke Museum Kenangan &nbsp;→</button>
+  </div>
+</div>
+
+<!-- ████ MUSEUM MENU ████ -->
+<div class="page" id="page-museum">
+  <div class="museum-wrap">
+    <h2 id="museum-title">Museum Kenangan</h2>
+    <p class="museum-sub">Jelajahi setiap ruangan dan temukan kenangan istimewa ✦</p>
+    <div class="rooms-grid">
+      <button class="room-btn r-map"    data-room="map"    onclick="goRoom('map')">   <div class="room-icon-box">🗺️</div><span>Peta Museum</span></button>
+      <button class="room-btn r-begin"  data-room="begin"  onclick="goRoom('begin')"> <div class="room-icon-box">💗</div><span>Awal Kita</span></button>
+      <button class="room-btn r-mem"    data-room="mem"    onclick="goRoom('mem')">   <div class="room-icon-box">📸</div><span>Kenangan</span></button>
+      <button class="room-btn r-likes"  data-room="likes"  onclick="goRoom('likes')"> <div class="room-icon-box">😊</div><span>Yang Kusuka</span></button>
+      <button class="room-btn r-diff"   data-room="diff"   onclick="goRoom('diff')">  <div class="room-icon-box">☁️</div><span>Ruang Sulit</span></button>
+      <button class="room-btn r-achiev" data-room="achiev" onclick="goRoom('achiev')"><div class="room-icon-box">🏆</div><span>Pencapaian</span></button>
+      <button class="room-btn r-future" data-room="future" onclick="goRoom('future')"><div class="room-icon-box">🚀</div><span>Masa Depan</span></button>
+      <button class="room-btn r-quotes" data-room="quotes" onclick="goRoom('quotes')"><div class="room-icon-box">💬</div><span>Kata Hati</span></button>
+      <button class="room-btn r-sound"  data-room="sound"  onclick="goRoom('sound')"> <div class="room-icon-box">🎵</div><span>Lagu Kita</span></button>
+      <button class="room-btn r-trivia" data-room="trivia" onclick="goRoom('trivia')"><div class="room-icon-box">🧠</div><span>Trivia Kita</span></button>
+      <button class="room-btn r-secret locked" id="btn-secret" data-room="secret" onclick="goRoom('secret')"><div class="room-icon-box" id="secret-icon">🔒</div><span>Ruang Rahasia</span></button>
+      <button class="room-btn r-exit"   data-room="exit"   onclick="goRoom('exit')">  <div class="room-icon-box">🚪</div><span>Penutup</span></button>
+    </div>
+    <p class="secret-hint" id="secret-hint">🔒 Kunjungi semua ruangan untuk membuka Ruang Rahasia</p>
+    <button class="btn-restart" onclick="startOver()">↺ Mulai Ulang</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: PETA MUSEUM ████ -->
+<div class="room-page" id="room-map">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#1a9fd4,#0a6fa0);">🗺️</div>
+      <h2>Peta Museum</h2>
+    </div>
+    <div class="map-grid" id="map-grid">
+      <div class="map-cell current-cell" data-key="map"><div class="mc-icon">🗺️</div><div>Peta</div></div>
+      <div class="map-cell" data-key="begin"><div class="mc-icon">💗</div><div>Awal Kita</div></div>
+      <div class="map-cell" data-key="mem"><div class="mc-icon">📸</div><div>Kenangan</div></div>
+      <div class="map-cell" data-key="likes"><div class="mc-icon">😊</div><div>Yang Kusuka</div></div>
+      <div class="map-cell" data-key="diff"><div class="mc-icon">☁️</div><div>Sulit</div></div>
+      <div class="map-cell" data-key="achiev"><div class="mc-icon">🏆</div><div>Pencapaian</div></div>
+      <div class="map-cell" data-key="future"><div class="mc-icon">🚀</div><div>Masa Depan</div></div>
+      <div class="map-cell" data-key="quotes"><div class="mc-icon">💬</div><div>Kata Hati</div></div>
+      <div class="map-cell" data-key="sound"><div class="mc-icon">🎵</div><div>Lagu Kita</div></div>
+      <div class="map-cell" data-key="trivia"><div class="mc-icon">🧠</div><div>Trivia</div></div>
+      <div class="map-cell locked-cell" data-key="secret"><div class="mc-icon">🔒</div><div>Rahasia</div></div>
+      <div class="map-cell" data-key="exit"><div class="mc-icon">🚪</div><div>Penutup</div></div>
+    </div>
+    <div class="museum-guide">
+      <div class="guide-title">📍 Panduan Museum</div>
+      <p>Selamat datang di museum kenangan yang sangat istimewa ini — sebuah tempat yang dibuat khusus untuk merayakan perjalanan hidup kita bersama. Setiap ruangan menyimpan sepotong cerita kita, dari awal pertemuan, kenangan indah, tantangan yang kita lalui bersama, hingga mimpi-mimpi yang ingin kita wujudkan. Jelajahi dengan santai. Ruang Rahasia akan terbuka setelah kamu mengunjungi semua ruangan lainnya. 💕</p>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: AWAL KITA ████ -->
+<div class="room-page" id="room-begin">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#f0487a,#c41850);">💗</div>
+      <h2>Awal Kita</h2>
+    </div>
+    <div class="photo-2col">
+      <div class="photo-card">
+        <div id="begin-photo1-wrap"><div class="photo-placeholder-box">📷</div></div>
+        <div class="photo-label">Cerita Pertemuan Pertama</div>
+      </div>
+      <div class="photo-story-box">
+        <p class="story-text">Aku masih ingat pertama kali kita berbicara. Ada sesuatu yang berbeda darimu — energimu begitu hangat dan aku tahu, sejak saat itu, bahwa kamu adalah seseorang yang istimewa. Momen itu mengubah segalanya, dan aku sangat bersyukur jalan hidup kita dipertemukan. 💕</p>
+      </div>
+    </div>
+    <div class="photo-wide">
+      <div id="begin-photo2-wrap"><div class="photo-placeholder-wide">🥰</div></div>
+      <div class="photo-label">Foto Pertama Bersama</div>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: KENANGAN ████ -->
+<div class="room-page" id="room-mem">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#9b5de5,#6a28c8);">📸</div>
+      <h2>Kenangan</h2>
+    </div>
+
+    <!-- VIDEO — full width di atas -->
+    <div class="mem-video-top" id="mem-video-card">
+      <div class="mem-video-inner">
+        <!-- diisi JS jika ada video, fallback placeholder -->
+        <div class="mem-video-placeholder">
+          <div style="font-size:2.4rem;margin-bottom:.4rem;">🎬</div>
+          <div style="font-size:.8rem;opacity:.7;">Video Kenangan</div>
+        </div>
+      </div>
+      <div class="mem-label" style="padding:.5rem 0 0;text-align:center;font-size:.78rem;font-weight:700;color:#374151;">Video Kenangan</div>
+    </div>
+
+    <!-- 2 FOTO — berdampingan di bawah -->
+    <div class="mem-photos-row">
+      <div class="mem-photo-col">
+        <div class="mem-photo-box" id="mem-photo3-wrap">
+          <div class="mem-photo-placeholder">🖼️</div>
+        </div>
+        <div class="mem-label">Momen Terabadikan</div>
+      </div>
+      <div class="mem-photo-col">
+        <div class="mem-photo-box" id="mem-photo4-wrap">
+          <div class="mem-photo-placeholder">💑</div>
+        </div>
+        <div class="mem-label">Waktu Istimewa</div>
+      </div>
+    </div>
+
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: YANG KUSUKA ████ -->
+<div class="room-page" id="room-likes">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#f77f00,#d45500);">😊</div>
+      <h2>Yang Kusuka Darimu</h2>
+    </div>
+    <div class="likes-list" id="likes-list">
+      <div class="like-item"><span>Senyummu yang selalu bikin hari jadi cerah</span><span class="heart-icon">♡</span></div>
+      <div class="like-item"><span>Kesabaranmu yang luar biasa</span><span class="heart-icon">♡</span></div>
+      <div class="like-item"><span>Suaramu yang menenangkan</span><span class="heart-icon">♡</span></div>
+      <div class="like-item"><span>Cara kamu peduli pada orang-orang di sekitarmu</span><span class="heart-icon">♡</span></div>
+      <div class="like-item"><span>Cara kamu tetap ada di saat susah sekalipun</span><span class="heart-icon">♡</span></div>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: RUANG SULIT ████ -->
+<div class="room-page" id="room-diff">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#607080,#3a4a58);">☁️</div>
+      <h2>Ruang yang Sulit</h2>
+    </div>
+    <div class="exhibit-list">
+      <div class="exhibit-card"><div class="ex-icon">☁️</div><div><h4>Pameran: Jarak yang Memisahkan</h4><p>Jauh secara fisik, namun tak pernah benar-benar terpisah. Setiap panggilan, setiap pesan, setiap "selamat malam" adalah jembatan yang menjaga kita tetap terhubung.</p></div></div>
+      <div class="exhibit-card"><div class="ex-icon">☁️</div><div><h4>Pameran: Kesalahpahaman</h4><p>Kata-kata yang salah dimengerti, perasaan yang keliru ditafsirkan. Namun kita belajar bahwa kesabaran dan kejujuran selalu menemukan jalan pulang satu sama lain.</p></div></div>
+      <div class="exhibit-card"><div class="ex-icon">☁️</div><div><h4>Pameran: Hari-Hari Berat</h4><p>Hari-hari ketika segalanya terasa sangat berat. Namun kita saling menopang, membuktikan bahwa bersama, kita bisa melewati badai apapun.</p></div></div>
+    </div>
+    <p class="diff-quote">Kita telah melewati badai dan keluar menjadi lebih kuat dari sebelumnya. 🌈</p>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: PENCAPAIAN ████ -->
+<div class="room-page" id="room-achiev">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#e8a800,#c07000);">🏆</div>
+      <h2>Ruang Pencapaian</h2>
+    </div>
+    <div class="achiev-box">
+      <span class="achiev-trophy">🏆</span>
+      <h3>Pencapaian Kita Bersama</h3>
+      <div class="achiev-list">
+        <div class="achiev-item"><span class="check-icon">✅</span>Tetap bersama di saat-saat paling sulit</div>
+        <div class="achiev-item"><span class="check-icon">✅</span>Ahli dalam menenangkan si overthinking</div>
+        <div class="achiev-item"><span class="check-icon">✅</span>Teman perjalanan terbaik di dunia</div>
+        <div class="achiev-item"><span class="check-icon">✅</span>Manusia paling kusayangi seumur hidup</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Kelengkapan Hubungan Kita</span><span>100%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="progress-sub">Dan masih terus bertumbuh! ❤️</p>
+      </div>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: MASA DEPAN ████ -->
+<div class="room-page" id="room-future">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#00b894,#007a60);">🚀</div>
+      <h2>Ruang Masa Depan</h2>
+    </div>
+    <div class="future-box">
+      <span class="future-icon">🚀</span>
+      <h3>Hal-Hal yang Ingin Kita Lakukan & Wujudkan</h3>
+      <div class="future-paras">
+        <p>Aku bermimpi tentang semua petualangan yang menunggu kita. Menjelajahi tempat-tempat baru bersama, menciptakan lebih banyak kenangan yang akan kita kenang selamanya.</p>
+        <p>Membangun kehidupan yang penuh tawa, saling pengertian, dan dukungan tanpa henti untuk impian dan tujuan masing-masing.</p>
+        <p>Bertumbuh bersama, belajar bersama, dan menghadapi apapun yang datang — bergandengan tangan, berdampingan.</p>
+        <p>Yang terpenting, aku berharap kita terus saling memilih satu sama lain, setiap hari, dan membangun sesuatu yang indah — sesuatu yang hanya milik kita berdua.</p>
+      </div>
+      <p class="future-tagline">Yang terbaik masih menanti kita di depan ✨</p>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: KATA HATI ████ -->
+<div class="room-page" id="room-quotes">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#3d7aed,#2050b8);">💬</div>
+      <h2>Kata Hati</h2>
+    </div>
+    <p class="quotes-sub">Kutipan-kutipan yang selalu mengingatkanku padamu</p>
+    <div class="quote-list">
+      <div class="quote-card"><span class="quote-mark">❝</span><p class="qtext">"Di sebuah ruangan penuh karya seni, mataku akan tetap tertuju padamu."</p><p class="qauthor">— Anonim</p></div>
+      <div class="quote-card"><span class="quote-mark">❝</span><p class="qtext">"Kamu adalah hariku hari ini dan seluruh hari esokku."</p><p class="qauthor">— Leo Christopher</p></div>
+      <div class="quote-card"><span class="quote-mark">❝</span><p class="qtext">"Aku mencintaimu bukan hanya karena siapa dirimu, tapi karena siapa aku ketika bersamamu."</p><p class="qauthor">— Roy Croft</p></div>
+      <div class="quote-card"><span class="quote-mark">❝</span><p class="qtext">"Apapun yang menyusun jiwaku, jiwa kita terbuat dari bahan yang sama."</p><p class="qauthor">— Emily Brontë</p></div>
+      <div class="quote-card"><span class="quote-mark">❝</span><p class="qtext">"Kamu adalah setiap alasan, setiap harapan, dan setiap mimpi yang pernah kumiliki."</p><p class="qauthor">— The Notebook</p></div>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: LAGU KITA ████ -->
+<div class="room-page" id="room-sound">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#00c896,#009a72);">🎵</div>
+      <h2>Lagu Kita</h2>
+    </div>
+    <p class="sound-sub">Lagu-lagu yang selalu mengingatkanku padamu</p>
+    <div class="track-list" id="track-list">
+      <a class="track-item" href="#" target="_blank" id="track1-link"><div class="track-thumb">🎵</div><div class="track-info"><strong id="track1-title">Lagu yang selalu mengingatkanku padamu</strong><span id="track1-desc">Melodi yang terputar setiap kali aku merindukanmu.</span></div></a>
+      <a class="track-item" href="#" target="_blank" id="track2-link"><div class="track-thumb">🎶</div><div class="track-info"><strong id="track2-title">Lagu yang cocok untuk kita berdua</strong><span id="track2-desc">Menggambarkan perjalanan kita dengan sangat sempurna.</span></div></a>
+      <a class="track-item" href="#" target="_blank" id="track3-link"><div class="track-thumb">🎤</div><div class="track-info"><strong id="track3-title">Artis favoritmu</strong><span id="track3-desc">Karena aku tahu betapa berartinya musik ini untukmu.</span></div></a>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: TRIVIA ████ -->
+<div class="room-page" id="room-trivia">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#e84040,#b01818);">🧠</div>
+      <h2>Trivia Kita</h2>
+    </div>
+    <p class="trivia-sub">Seberapa baik kamu mengingat cerita kita?</p>
+    <p class="trivia-score" id="trivia-score"></p>
+    <div id="trivia-questions"></div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: RUANG RAHASIA ████ -->
+<div class="room-page" id="room-secret">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#a040d0,#6a18a0);">🔓</div>
+      <h2>Ruang Rahasia</h2>
+    </div>
+    <div class="secret-wrap">
+      <span class="secret-lock">🔓</span>
+      <div class="secret-photo-frame" id="secret-photo-frame"><div class="secret-ph">💑</div></div>
+      <p class="secret-quote">"Setelah semua ruangan yang telah kamu kunjungi, semua kenangan, semua cerita, semua pencapaian — ini masih menjadi bagian favoritku."</p>
+      <span class="secret-heart">💗</span>
+      <p class="secret-you">Kamu. 💜</p>
+    </div>
+    <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
+  </div>
+</div>
+
+<!-- ████ ROOM: PENUTUP ████ -->
+<div class="room-page" id="room-exit">
+  <div class="room-wrap">
+    <div class="room-header">
+      <div class="room-icon-circle" style="background:linear-gradient(135deg,#f472b6,#a855f7);">💖</div>
+    </div>
+    <div class="final-wrap">
+      <span class="final-heart">❤️</span>
+      <h2>Pesan Terakhir</h2>
+      <div class="video-embed-wrap" id="final-video-wrap">
+        <div class="video-placeholder-box" id="final-video-placeholder">
+          <div style="color:#fff;text-align:center;padding:1rem;"><div style="font-size:2.5rem;margin-bottom:.5rem;">🎬</div><div style="font-size:.8rem;opacity:.7;">Video pesan untukmu</div></div>
+        </div>
+      </div>
+      <p class="final-quote">"Setiap momen bersamamu adalah sebuah anugerah. Ini adalah awal dari banyak kenangan indah yang akan kita ciptakan bersama."</p>
+      <button class="btn-close-final" onclick="backToMuseum()">Tutup</button>
     </div>
   </div>
-
-  <nav class="nav-wrap">
-    <div class="nav">
-      <button class="nav-btn active" onclick="showPage('p-awal',this)">💌 Awal Bertemu</button>
-      <button class="nav-btn" onclick="showPage('p-kenangan',this)">📸 Kenangan</button>
-      <button class="nav-btn" onclick="showPage('p-suka',this)">💝 Hal Disukai</button>
-      <button class="nav-btn" onclick="showPage('p-sulit',this)">🌧 Saat Sulit</button>
-      <button class="nav-btn" onclick="showPage('p-pencapaian',this)">🏆 Pencapaian</button>
-      <button class="nav-btn" onclick="showPage('p-harapan',this)">✨ Harapan</button>
-      <button class="nav-btn" onclick="showPage('p-quotes',this)">💬 Quotes</button>
-      <button class="nav-btn" onclick="showPage('p-lagu',this)">🎵 Lagu</button>
-      <button class="nav-btn" onclick="showPage('p-quiz',this)">🎯 Pertanyaan</button>
-    </div>
-  </nav>
-
-  <!-- AWAL BERTEMU -->
-  <div class="page active" id="p-awal">
-    <div class="sec-title">Awal Kita Bertemu</div>
-    <div class="sec-sub">Momen yang mengubah segalanya</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="card">
-      <span class="card-icon">💌</span>
-      <div class="card-title">Saat Pertama Kali</div>
-      <div class="card-body">Ada sesuatu yang berbeda ketika pertama kali aku melihatmu.<br>Entah apa — mungkin senyumanmu, mungkin caramu berbicara,<br>tapi aku tahu, pertemuan ini bukan sesuatu yang biasa.</div>
-    </div>
-    <div class="timeline">
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Pertemuan Pertama</div><div class="tl-text">Saat itu aku tidak tahu bahwa hari itu akan menjadi salah satu hari terpenting dalam hidupku. Kamu hadir dan duniaku terasa lebih hangat.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Percakapan Pertama</div><div class="tl-text">Kata-kata pertama yang kamu ucapkan sudah membuatku ingin terus mendengarmu bicara. Ada ketenangan dalam suaramu yang tidak bisa aku jelaskan.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Saat Aku Sadar</div><div class="tl-text">Ada satu momen, ketika kamu tertawa, aku sadar bahwa aku tidak ingin kehilangan orang ini dari hidupku. Tidak pernah.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kini</div><div class="tl-text">Dan di sini kita, bersama, dan aku bersyukur setiap hari untuk pertemuan itu. Semoga hubungan kita langgeng selamanya.</div></div>
-    </div>
-  </div>
-
-  <!-- KENANGAN -->
-  <div class="page" id="p-kenangan">
-    <div class="sec-title">Kenangan Kita</div>
-    <div class="sec-sub">Setiap momen yang tersimpan di hati</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="card"><span class="card-icon">📸</span><div class="card-title">Momen Bersama</div><div class="card-body">Di antara semua kenangan yang pernah aku punya,<br>kenangan bersamamu selalu yang paling berharga.</div></div>
-    <div class="timeline">
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 01</div><div class="tl-text">Momen-momen kecil bersamamu — ngobrol panjang sampai larut, ketawa hal-hal sepele — semua itu tak ternilai.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 02</div><div class="tl-text">Hari-hari saat kita jalan berdua, tanpa tujuan yang jelas, tapi setiap langkah bersamamu terasa sempurna.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 03</div><div class="tl-text">Saat kamu cerita tentang impianmu — aku selalu kagum. Kamu punya dunia dalam dirimu yang terus membuatku terpesona.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">✦ Kenangan 04</div><div class="tl-text">Dan momen ulang tahunmu ini — aku ingin kamu tahu, setiap kenangan itu tersimpan rapi di hatiku. Untuk selamanya.</div></div>
-    </div>
-    <div class="card" style="margin-top:1.5rem;"><div class="card-body" style="font-size:1.2rem;">"Kenangan terbaik bukan tentang tempat yang kita kunjungi,<br>tapi tentang orang yang menemani kita di sana."</div></div>
-  </div>
-
-  <!-- HAL DISUKAI -->
-  <div class="page" id="p-suka">
-    <div class="sec-title">Hal yang Aku Sukai dari Kamu</div>
-    <div class="sec-sub">Semuanya — tapi ini beberapa di antaranya</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="likes-grid">
-      <div class="like-card"><span class="like-emoji">😊</span><div class="like-label">Senyumanmu</div></div>
-      <div class="like-card"><span class="like-emoji">🌟</span><div class="like-label">Semangatmu</div></div>
-      <div class="like-card"><span class="like-emoji">🤗</span><div class="like-label">Kehangatan</div></div>
-      <div class="like-card"><span class="like-emoji">💬</span><div class="like-label">Cara bicaramu</div></div>
-      <div class="like-card"><span class="like-emoji">😂</span><div class="like-label">Tawa yang tulus</div></div>
-      <div class="like-card"><span class="like-emoji">💪</span><div class="like-label">Keteguhanmu</div></div>
-      <div class="like-card"><span class="like-emoji">🌸</span><div class="like-label">Kelembutan hati</div></div>
-      <div class="like-card"><span class="like-emoji">🧠</span><div class="like-label">Kecerdasanmu</div></div>
-      <div class="like-card"><span class="like-emoji">🎨</span><div class="like-label">Kreativitasmu</div></div>
-      <div class="like-card"><span class="like-emoji">🌙</span><div class="like-label">Momen malammu</div></div>
-      <div class="like-card"><span class="like-emoji">🤍</span><div class="like-label">Ketulusanmu</div></div>
-      <div class="like-card"><span class="like-emoji">✨</span><div class="like-label">Seluruhnya</div></div>
-    </div>
-    <div class="card" style="margin-top:1.5rem;"><div class="card-body">Tapi yang paling aku sukai dari kamu adalah caramu ada —<br>tulus, hangat, dan selalu menjadi cahaya di hari-hariku.</div></div>
-  </div>
-
-  <!-- SAAT SULIT -->
-  <div class="page" id="p-sulit">
-    <div class="sec-title">Saat-Saat Sulit</div>
-    <div class="sec-sub">Yang menjadikan kita lebih kuat</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="card"><span class="card-icon">🌧</span><div class="card-body">Tidak ada hubungan yang tidak pernah melewati badai.<br>Kita pun punya momen-momen itu — dan kita melewatinya bersama.</div></div>
-    <div class="difficult-card"><div class="diff-title">✦ Saat Jarak Terasa Jauh</div><div class="diff-text">Ada hari-hari ketika kita tidak selalu bisa saling ada secara fisik. Tapi rasa itu tidak pernah pergi. Kamu selalu ada di pikiranku, bahkan ketika kita tidak bisa bertemu.</div></div>
-    <div class="difficult-card"><div class="diff-title">✦ Saat Kata-Kata Salah Terucap</div><div class="diff-text">Tidak ada manusia sempurna, begitu pun kita. Tapi setiap salah paham yang kita lewati, mengajarkan kita lebih banyak tentang satu sama lain.</div></div>
-    <div class="difficult-card"><div class="diff-title">✦ Saat Lelah Melanda</div><div class="diff-text">Di hari-hari paling melelahkan, bertemu denganmu — bahkan hanya sejenak — sudah cukup untuk memulihkan segalanya.</div></div>
-    <div class="card" style="margin-top:1rem;"><div class="card-body">Setiap badai yang kita lewati bersama<br>hanya membuktikan satu hal:<br>kita cukup kuat untuk terus melangkah bersama. 🌹</div></div>
-  </div>
-
-  <!-- PENCAPAIAN -->
-  <div class="page" id="p-pencapaian">
-    <div class="sec-title">Pencapaian Kita</div>
-    <div class="sec-sub">Hal-hal yang sudah kita raih bersama</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="achievement-item"><div class="ach-icon">🥂</div><div><div class="ach-label">✦ Pencapaian Pertama</div><div class="ach-text">Kita berhasil saling memahami, saling menerima apa adanya — dan itu bukan hal mudah. Itu pencapaian terbesar kita.</div></div></div>
-    <div class="achievement-item"><div class="ach-icon">💞</div><div><div class="ach-label">✦ Bertahan Bersama</div><div class="ach-text">Melewati hari-hari sulit dan tetap memilih satu sama lain — itu bukan kebetulan. Itu komitmen yang kita bangun berdua.</div></div></div>
-    <div class="achievement-item"><div class="ach-icon">🌱</div><div><div class="ach-label">✦ Tumbuh Bersama</div><div class="ach-text">Kita sudah tumbuh — masing-masing sebagai individu, dan sebagai pasangan. Aku bangga melihat siapa kamu hari ini.</div></div></div>
-    <div class="achievement-item"><div class="ach-icon">⭐</div><div><div class="ach-label">✦ Saling Mendukung</div><div class="ach-text">Setiap kali kamu punya mimpi, aku ada untuk mendukungmu. Dan kamu selalu melakukan hal yang sama untukku.</div></div></div>
-    <div class="achievement-item"><div class="ach-icon">🎂</div><div><div class="ach-label">✦ Hari Ini</div><div class="ach-text">Dan hari ini, ulang tahunmu, adalah pengingat bahwa kita masih di sini, bersama, dan itu adalah hal yang paling aku syukuri.</div></div></div>
-  </div>
-
-  <!-- HARAPAN -->
-  <div class="page" id="p-harapan">
-    <div class="sec-title">Harapan Masa Depan</div>
-    <div class="sec-sub">Semua yang aku doakan untukmu & kita</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="hope-item"><span class="hope-emoji">🌅</span><div class="hope-text">Semoga setiap pagi yang kamu bangun selalu diisi dengan kebahagiaan dan rasa syukur yang tulus.</div></div>
-    <div class="hope-item"><span class="hope-emoji">💫</span><div class="hope-text">Semoga semua impian yang kamu simpan di hati perlahan-lahan menjadi kenyataan, satu per satu.</div></div>
-    <div class="hope-item"><span class="hope-emoji">💞</span><div class="hope-text">Semoga hubungan kita terus tumbuh — lebih dalam, lebih kuat, lebih indah dari hari ke hari.</div></div>
-    <div class="hope-item"><span class="hope-emoji">🏡</span><div class="hope-text">Semoga kita suatu hari bisa membangun rumah — bukan hanya tempat tinggal, tapi rumah yang penuh cinta dan tawa.</div></div>
-    <div class="hope-item"><span class="hope-emoji">🌿</span><div class="hope-text">Semoga kamu selalu sehat, selalu kuat, dan selalu punya orang-orang yang mencintaimu dengan tulus — termasuk aku.</div></div>
-    <div class="hope-item"><span class="hope-emoji">✨</span><div class="hope-text">Dan semoga di ulang tahunmu yang akan datang, aku masih ada di sisimu, menyaksikan kamu terus bersinar.</div></div>
-  </div>
-
-  <!-- QUOTES -->
-  <div class="page" id="p-quotes">
-    <div class="sec-title">Quotes untuk Kamu</div>
-    <div class="sec-sub">Kata-kata yang menggambarkan kita</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="quote-box">
-      <div class="quote-mark">"</div>
-      <div class="quote-text" id="quote-text"></div>
-      <div class="quote-nav" id="quote-nav"></div>
-    </div>
-    <div style="text-align:center;">
-      <button class="btn-outline" onclick="nextQuote()">✦ Quote Selanjutnya ✦</button>
-    </div>
-  </div>
-
-  <!-- LAGU -->
-  <div class="page" id="p-lagu">
-    <div class="sec-title">Lagu yang Disukai</div>
-    <div class="sec-sub">Melodi yang mengingatkan kita satu sama lain</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div class="card"><div class="card-body">Setiap lagu punya cerita. Dan beberapa lagu ini<br>selalu mengingatkanku padamu.</div></div>
-    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">Perfect</div><div class="song-artist">Ed Sheeran</div><div class="song-note">Karena kamu memang sempurna untukku</div></div></div>
-    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">All of Me</div><div class="song-artist">John Legend</div><div class="song-note">Sepenuh hatiku, untuk kamu</div></div></div>
-    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">A Thousand Years</div><div class="song-artist">Christina Perri</div><div class="song-note">Aku akan mencintaimu selama seribu tahun</div></div></div>
-    <div class="song-card"><div class="song-icon">🎵</div><div class="song-info"><div class="song-title">Lagu Favoritmu</div><div class="song-artist">Apapun yang kamu suka</div><div class="song-note">Lagu apapun yang kamu suka — itu juga laguku</div></div></div>
-    <div class="card" style="margin-top:1rem;"><div class="card-body">🎶 Setiap kali lagu ini terputar,<br>aku selalu tersenyum dan memikirkanmu. 🎶</div></div>
-  </div>
-
-  <!-- QUIZ -->
-  <div class="page" id="p-quiz">
-    <div class="sec-title">Pertanyaan Kecil</div>
-    <div class="sec-sub">Seberapa baik kamu mengenal kita?</div>
-    <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-    <div id="quiz-container"></div>
-    <div class="score-display" id="score-display" style="display:none;">
-      <span class="score-num" id="score-num">0/5</span>
-      <div class="score-label" id="score-label"></div>
-    </div>
-    <div style="text-align:center;">
-      <button class="btn-outline" onclick="resetQuiz()">✦ Ulangi Quiz ✦</button>
-    </div>
-  </div>
-
-</div><!-- /app -->
+</div>
 
 <script>
-// PARTICLES
-(function(){
-  var pc=document.getElementById('particles');
-  var colors=['#8B1A1A','#A52020','#C0392B','#7B3030','#922B21'];
-  for(var i=0;i<35;i++){
-    var p=document.createElement('div');
-    p.className='p';
-    p.style.left=Math.random()*100+'%';
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDelay=(Math.random()*12)+'s';
-    p.style.animationDuration=(8+Math.random()*10)+'s';
-    p.style.width=(5+Math.random()*7)+'px';
-    p.style.height=(9+Math.random()*9)+'px';
-    p.style.transform='rotate('+Math.random()*360+'deg)';
-    pc.appendChild(p);
+/* ============================================================
+   ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗
+  ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
+  ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+  ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+  ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+   ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+  ============================================================
+  CARA PAKAI:
+  Isi nilai di bawah ini, lalu simpan file dan upload ke GitHub.
+  Kosongkan string ("") jika tidak ingin mengisi bagian tertentu.
+  ============================================================ */
+
+const CONFIG = {
+
+  /* ----------------------------------------------------------
+     👤 IDENTITAS
+     ---------------------------------------------------------- */
+  NAMA_PENERIMA : "Berliana",          // ← Nama pasanganmu (yang akan menerima kartu)
+  NAMA_PENGIRIM : "Billy",          // ← Namamu (yang akan muncul di ucapan)
+
+  /* ----------------------------------------------------------
+     📸 FOTO
+     Format yang DIDUKUNG:
+     ✅ Google Drive  → https://drive.google.com/file/d/FILE_ID/view
+                        (cukup paste link biasa, akan dikonversi otomatis)
+     ✅ Imgur         → https://imgur.com/abcDEFg  atau  https://i.imgur.com/abcDEFg.jpg
+     ✅ Link gambar langsung → https://contoh.com/foto.jpg
+     ❌ Google Photos → TIDAK DIDUKUNG, pakai Imgur sebagai alternatif
+
+     Cara upload ke Imgur (gratis, tanpa akun):
+       1. Buka imgur.com → klik "New Post"
+       2. Upload foto → salin link
+     ---------------------------------------------------------- */
+  FOTO_KENALAN_PERTAMA : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Foto cerita pertama ketemu (Ruang: Awal Kita - kiri)
+                                     //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
+
+  FOTO_PERTAMA_BERSAMA : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Foto berdua paling berkesan (Ruang: Awal Kita - bawah lebar)
+                                     //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
+
+  FOTO_KENANGAN_1      : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Momen terabadikan (Ruang: Kenangan - kiri)
+                                     //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
+
+  FOTO_KENANGAN_2      : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Waktu istimewa (Ruang: Kenangan - kanan)
+                                     //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
+
+  FOTO_SECRET          : "https://drive.google.com/file/d/1R-YT1sf3EXMVEkp7ktgYqQU-WH8Mdqhs/view?usp=drive_link",         // ← Foto paling spesial berdua (Ruang: Ruang Rahasia)
+                                     //   cth: "https://drive.google.com/uc?id=1aBcDeFgH..."
+
+  /* ----------------------------------------------------------
+     🎬 VIDEO (Google Drive — diputar langsung di dalam aplikasi)
+     Cara mendapat link Google Drive:
+       1. Upload video ke drive.google.com
+       2. Klik kanan → Bagikan → "Siapa saja yang punya link" → Viewer
+       3. Salin link, lalu paste langsung di bawah
+     Format yang DIDUKUNG — cukup paste salah satu:
+     ✅ Link share  → https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+     ✅ Link biasa  → https://drive.google.com/file/d/FILE_ID/view
+     ✅ Link /open  → https://drive.google.com/open?id=FILE_ID
+     (YouTube juga masih didukung sebagai fallback)
+     ---------------------------------------------------------- */
+  VIDEO_KENANGAN    : "https://drive.google.com/file/d/1_gdLPHJh8el4Qxr_ScedKuQRzPDx6Kpg/view?usp=drive_link",  // ← Link Google Drive video kenangan (Ruang: Kenangan)
+                           //   cth: "https://drive.google.com/file/d/1aBcDeFgH.../view"
+
+  VIDEO_PESAN_AKHIR : "https://drive.google.com/file/d/1_gdLPHJh8el4Qxr_ScedKuQRzPDx6Kpg/view?usp=drive_link",  // ← Link Google Drive video pesan terakhir (Ruang: Penutup)
+                           //   cth: "https://drive.google.com/file/d/1aBcDeFgH.../view"
+
+  /* ----------------------------------------------------------
+     🎵 LAGU (Spotify — diputar langsung di dalam aplikasi)
+     Format yang DIDUKUNG — cukup paste link Spotify:
+     ✅ Lagu      → https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT
+     ✅ Playlist  → https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M
+     ✅ Album     → https://open.spotify.com/album/1DFixLWuPkv3KT3TnV35m3
+     Cara mendapat link: Buka lagu di Spotify → klik ••• → Bagikan → Salin link
+     ---------------------------------------------------------- */
+  LAGU : [
+    {
+      judul : "Lagu yang selalu mengingatkanku padamu",      // ← Judul lagu 1
+      deskripsi : "Melodi yang terputar setiap kali aku merindukanmu.",  // ← Keterangan
+      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
+    },
+    {
+      judul : "Lagu yang cocok untuk kita berdua",          // ← Judul lagu 2
+      deskripsi : "Menggambarkan perjalanan kita dengan sangat sempurna.",
+      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
+    },
+    {
+      judul : "Artis favoritmu",                            // ← Judul lagu 3
+      deskripsi : "Karena aku tahu betapa berartinya musik ini untukmu.",
+      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
+    },
+  ],
+
+  /* ----------------------------------------------------------
+     😊 HAL YANG KUSUKA DARIMU (5 item)
+     ---------------------------------------------------------- */
+  HAL_YANG_KUSUKA : [
+    "Senyummu yang selalu bikin hari jadi cerah",           // ← Item 1
+    "Kesabaranmu yang luar biasa",                          // ← Item 2
+    "Suaramu yang menenangkan",                             // ← Item 3
+    "Cara kamu peduli pada orang-orang di sekitarmu",       // ← Item 4
+    "Cara kamu tetap ada di saat susah sekalipun",          // ← Item 5
+  ],
+
+  /* ----------------------------------------------------------
+     🧠 TRIVIA (3 pertanyaan)
+     ans: indeks jawaban benar, dihitung dari 0
+          0 = pilihan pertama, 1 = kedua, 2 = ketiga, 3 = keempat
+     ---------------------------------------------------------- */
+  TRIVIA : [
+    {
+      pertanyaan : "Film pertama yang kita tonton bersama?",
+      pilihan    : ["Inception", "Titanic", "La La Land", "The Notebook"],
+      ans        : 2,   // ← La La Land (indeks ke-2)
+    },
+    {
+      pertanyaan : "Warna favoritku?",
+      pilihan    : ["Merah", "Biru", "Hijau", "Ungu"],
+      ans        : 3,   // ← Ungu (indeks ke-3)
+    },
+    {
+      pertanyaan : "Di mana kita pertama kali bertemu?",
+      pilihan    : ["Taman", "Kafe", "Sekolah", "Mall"],
+      ans        : 1,   // ← Kafe (indeks ke-1)
+    },
+  ],
+
+}; /* ← JANGAN HAPUS KURUNG KURAWAL INI */
+/* ============================================================
+   SELESAI — tidak perlu mengubah apapun di bawah baris ini
+   ============================================================ */
+
+/* STARFIELD */
+(function(){const c=document.getElementById('starfield'),ctx=c.getContext('2d');let W,H,stars=[];function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}resize();addEventListener('resize',resize);for(let i=0;i<160;i++)stars.push({x:Math.random()*2e3,y:Math.random()*2e3,r:.2+Math.random()*1.1,a:Math.random(),da:(Math.random()-.5)*.004+.001});(function draw(){ctx.clearRect(0,0,W,H);stars.forEach(s=>{s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;ctx.beginPath();ctx.arc(s.x%W,s.y%H,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(247,243,238,${s.a*.7})`;ctx.fill();});requestAnimationFrame(draw);})();})();
+
+/* STATE */
+let targetName='',senderName='',C={};
+let visitedRooms=new Set();
+const ALL_ROOMS=['map','begin','mem','likes','diff','achiev','future','quotes','sound','trivia'];
+const TOTAL_ROOMS=ALL_ROOMS.length;
+let triviaData=[];
+
+/* INIT — prioritas: URL param (dari Setup Page) → CONFIG (edit langsung) */
+(function init(){
+  const p=new URLSearchParams(location.search);
+  if(p.has('setup')){showPage('page-setup');return;}
+  const raw=p.get('d');
+  if(raw){
+    // Mode URL: data dari Setup Page
+    try{
+      C=JSON.parse(atob(decodeURIComponent(raw)));
+      targetName=C.name||'';
+      senderName=C.sender||'';
+    }catch(e){}
+  } else {
+    // Mode CONFIG: data langsung dari blok CONFIG di atas
+    targetName = CONFIG.NAMA_PENERIMA;
+    senderName = CONFIG.NAMA_PENGIRIM;
+    C = {
+      name   : CONFIG.NAMA_PENERIMA,
+      sender : CONFIG.NAMA_PENGIRIM,
+      p1     : CONFIG.FOTO_KENALAN_PERTAMA,
+      p2     : CONFIG.FOTO_PERTAMA_BERSAMA,
+      p3     : CONFIG.FOTO_KENANGAN_1,
+      p4     : CONFIG.FOTO_KENANGAN_2,
+      p5     : CONFIG.FOTO_SECRET,
+      v1     : CONFIG.VIDEO_KENANGAN,
+      v2     : CONFIG.VIDEO_PESAN_AKHIR,
+      st1    : CONFIG.LAGU[0]?.judul,
+      sd1    : CONFIG.LAGU[0]?.deskripsi,
+      su1    : CONFIG.LAGU[0]?.link,
+      st2    : CONFIG.LAGU[1]?.judul,
+      sd2    : CONFIG.LAGU[1]?.deskripsi,
+      su2    : CONFIG.LAGU[1]?.link,
+      st3    : CONFIG.LAGU[2]?.judul,
+      sd3    : CONFIG.LAGU[2]?.deskripsi,
+      su3    : CONFIG.LAGU[2]?.link,
+      l1     : CONFIG.HAL_YANG_KUSUKA[0],
+      l2     : CONFIG.HAL_YANG_KUSUKA[1],
+      l3     : CONFIG.HAL_YANG_KUSUKA[2],
+      l4     : CONFIG.HAL_YANG_KUSUKA[3],
+      l5     : CONFIG.HAL_YANG_KUSUKA[4],
+      tq     : CONFIG.TRIVIA.map(t=>({q:t.pertanyaan, opts:t.pilihan, ans:t.ans})),
+    };
   }
+  applyContent();
+  showPage('page-mystery');
 })();
 
-// SPLASH
-function enterApp(){
-  var splash=document.getElementById('splash');
-  splash.classList.add('hide');
-  setTimeout(function(){
-    splash.style.display='none';
-    var app=document.getElementById('app');
-    app.classList.add('show');
-  },1000);
+/* ── UTILS ─────────────────────────────────────────────────── */
+
+// Konversi berbagai format URL foto → URL yang bisa di-embed langsung
+function toEmbedPhoto(url){
+  if(!url) return '';
+  url = url.trim();
+
+  // Google Drive: format /file/d/ID/view  atau  /open?id=ID  atau  /uc?id=ID
+  const gdrive = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/);
+  if(gdrive){
+    // Gunakan format thumbnail Google Drive yang bisa di-embed tanpa login
+    return `https://drive.google.com/thumbnail?id=${gdrive[1]}&sz=w1000`;
+  }
+
+  // Google Photos: tidak bisa di-embed, kembalikan kosong
+  if(url.includes('photos.google.com') || url.includes('photos.app.goo.gl')){
+    return '__google_photos__';
+  }
+
+  // Imgur: pastikan pakai link gambar langsung (.jpg/.png/.gif)
+  const imgur = url.match(/imgur\.com\/(?!a\/)([a-zA-Z0-9]+)(?:\.[a-z]+)?/);
+  if(imgur && !url.match(/\.(jpg|jpeg|png|gif|webp)$/i)){
+    return `https://i.imgur.com/${imgur[1]}.jpg`;
+  }
+
+  // URL gambar langsung (sudah berformat .jpg/.png/dll)
+  return url;
 }
 
-// NAV
-function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+// Ambil YouTube video ID dari berbagai format URL
+function toYTid(input){
+  if(!input) return '';
+  input = input.trim();
+  // Sudah berupa ID pendek (11 karakter)
+  if(/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+  // Format youtu.be/ID
+  const short = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  if(short) return short[1];
+  // Format youtube.com/watch?v=ID atau /embed/ID
+  const long = input.match(/(?:v=|\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(long) return long[1];
+  return input;
 }
 
-// QUOTES
-var quotes=[
-  "Mencintaimu bukan pilihan — itu kebutuhan yang hadir secara alami di setiap napas yang aku hirup.",
-  "Kamu bukan hanya rumah yang aku pulangi, tapi juga cahaya yang membuatku ingin terus berjalan.",
-  "Di antara semua hal indah di dunia, kamu adalah yang paling ingin aku jaga selamanya.",
-  "Setiap hari bersamamu adalah hari yang tak ingin aku lewatkan satu pun.",
-  "Kamu hadir dan mengubah definisi kebahagiaanku menjadi sesuatu yang jauh lebih nyata.",
-  "Cinta bukan tentang menemukan orang yang sempurna, tapi tentang melihat kesempurnaan pada orang yang kamu cintai.",
-  "Bersama kamu, bahkan keheningan pun terasa berbicara hal-hal yang indah.",
-  "Aku tidak meminta bintang — aku hanya ingin terus memandang matamu setiap hari.",
-];
-var qi=0;
-
-function renderQuoteNav(){
-  var nav=document.getElementById('quote-nav');
-  nav.innerHTML='';
-  quotes.forEach(function(_,i){
-    var b=document.createElement('button');
-    b.className='q-btn'+(i===qi?' active':'');
-    b.onclick=(function(idx){return function(){qi=idx;showQuote();};})(i);
-    nav.appendChild(b);
-  });
+// Ambil Spotify track/playlist ID dari URL
+function toSpotifyEmbed(url){
+  if(!url) return '';
+  url = url.trim();
+  // Format: open.spotify.com/track/ID atau /playlist/ID atau /album/ID
+  const match = url.match(/open\.spotify\.com\/(track|playlist|album|episode)\/([a-zA-Z0-9]+)/);
+  if(match) return `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator&theme=0`;
+  // Sudah berupa embed URL
+  if(url.includes('spotify.com/embed')) return url;
+  return '';
 }
 
-function showQuote(){
-  var el=document.getElementById('quote-text');
-  el.style.opacity='0';
-  setTimeout(function(){
-    el.textContent=quotes[qi];
-    el.style.opacity='1';
-    renderQuoteNav();
-  },300);
+// Konversi URL Google Drive video → format /preview yang bisa di-embed
+function toGDriveVideoEmbed(input){
+  if(!input) return '';
+  input = input.trim();
+  // Semua format Google Drive → ambil FILE_ID
+  const match = input.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/);
+  if(match) return `https://drive.google.com/file/d/${match[1]}/preview`;
+  // Sudah format /preview
+  if(input.includes('drive.google.com') && input.includes('/preview')) return input;
+  return '';
 }
 
-function nextQuote(){
-  qi=(qi+1)%quotes.length;
-  showQuote();
+// Buat iframe embed — otomatis deteksi Google Drive atau YouTube
+function makeVideoEmbed(input){
+  if(!input) return '';
+  input = input.trim();
+
+  // Cek Google Drive dulu
+  const gdriveEmbed = toGDriveVideoEmbed(input);
+  if(gdriveEmbed){
+    return `<iframe style="width:100%;height:100%;position:absolute;inset:0;border:0;"
+      src="${gdriveEmbed}"
+      allow="autoplay"
+      allowfullscreen></iframe>`;
+  }
+
+  // Fallback YouTube (jika masih pakai YouTube)
+  const vid = toYTid(input);
+  if(vid){
+    return `<iframe style="width:100%;height:100%;position:absolute;inset:0;border:0;"
+      src="https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1"
+      allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+      allowfullscreen></iframe>`;
+  }
+
+  return '';
 }
-showQuote();
 
-// QUIZ
-var quizData=[
-  {q:"Apa hal pertama yang membuatmu tertarik pada pasanganmu?",opts:["Senyumannya","Cara bicaranya","Matanya","Kepribadiannya"],ans:3,fb:"Kepribadian seseorang memang yang paling membekas! 💞"},
-  {q:"Jika harus memilih satu kata untuk mendeskripsikan hubungan kita, apa pilihanmu?",opts:["Hangat","Tulus","Kuat","Bahagia"],ans:1,fb:"Ketulusan adalah fondasi cinta yang sesungguhnya ✨"},
-  {q:"Di mana tempat favoritmu untuk menghabiskan waktu bersama?",opts:["Di rumah, santai berdua","Jalan-jalan keluar","Makan bareng","Di mana saja, asal bersama"],ans:3,fb:"Benar! Yang penting orangnya, bukan tempatnya 🌹"},
-  {q:"Hal apa yang paling kamu rindukan saat tidak bisa bertemu?",opts:["Suaranya","Senyumannya","Pelukannya","Semuanya"],ans:3,fb:"Rindu itu tanda cinta yang nyata 💌"},
-  {q:"Apa harapan terbesarmu untuk hubungan ini?",opts:["Selalu bahagia","Tumbuh bersama","Langgeng selamanya","Saling mendukung"],ans:2,fb:"Semoga hubungan kita langgeng dan terus tumbuh indah 🌸"},
-];
-var score=0,answered=[];
+function makeSpotifyEmbed(url){
+  const embedUrl = toSpotifyEmbed(url);
+  if(!embedUrl) return '';
+  return `<iframe style="border-radius:12px;width:100%;border:0;"
+    src="${embedUrl}"
+    height="152" allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture"
+    loading="lazy"></iframe>`;
+}
 
-function buildQuiz(){
-  var c=document.getElementById('quiz-container');
-  c.innerHTML='';
-  score=0;answered=[];
-  document.getElementById('score-display').style.display='none';
-  quizData.forEach(function(q,qidx){
-    var div=document.createElement('div');
-    div.className='quiz-card';
-    var optsHtml=q.opts.map(function(o,oi){
-      return '<button class="q-opt" onclick="answerQ('+qidx+','+oi+',this)">'+o+'</button>';
+// Render foto dengan object-fit:contain (foto tidak terpotong)
+function setPhoto(wrapId, url){
+  const w = document.getElementById(wrapId);
+  if(!w) return;
+  const src = toEmbedPhoto(url);
+  if(!src) return;
+  if(src === '__google_photos__'){
+    w.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;background:#fdf2f8;gap:.4rem;">
+      <div style="font-size:2rem;">📷</div>
+      <div style="font-size:.68rem;color:#be185d;text-align:center;line-height:1.4;padding:0 .5rem;">Gunakan Google Drive<br>atau Imgur</div>
+    </div>`;
+    return;
+  }
+  // object-fit:contain → foto tampil utuh, tidak terpotong
+  w.innerHTML = `<img src="${src}" alt="foto"
+    style="width:100%;height:100%;object-fit:contain;background:#fff;display:block;"
+    onerror="this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#fdf2f8;font-size:2rem;>📷</div>'">`;
+}
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+/* ── APPLY CONTENT ─────────────────────────────────────────── */
+function applyContent(){
+
+  /* ── FOTO: Awal Kita ── */
+  if(C.p1) setPhoto('begin-photo1-wrap', C.p1);
+  if(C.p2) setPhoto('begin-photo2-wrap', C.p2);
+
+  /* ── FOTO: Kenangan (2 foto di bawah video) ── */
+  if(C.p3) setPhoto('mem-photo3-wrap', C.p3);
+  if(C.p4) setPhoto('mem-photo4-wrap', C.p4);
+
+  /* ── FOTO: Secret Room ── */
+  if(C.p5){
+    const src = toEmbedPhoto(C.p5);
+    const f = document.getElementById('secret-photo-frame');
+    if(f && src && src !== '__google_photos__')
+      f.innerHTML = `<img src="${src}"
+        style="width:100%;display:block;object-fit:contain;background:#fff;aspect-ratio:3/4;"
+        onerror="this.parentElement.innerHTML='<div class=secret-ph>💑</div>'">`;
+  }
+
+  /* ── VIDEO: Kenangan — inject ke dalam .mem-video-inner ── */
+  if(C.v1){
+    const inner = document.querySelector('#mem-video-card .mem-video-inner');
+    if(inner) inner.innerHTML = makeVideoEmbed(C.v1);
+  }
+
+  /* ── VIDEO: Penutup ── */
+  if(C.v2){
+    const wrap = document.getElementById('final-video-wrap');
+    if(wrap) wrap.innerHTML = makeVideoEmbed(C.v2);
+  }
+
+  /* ── MUSIK: Spotify embed player ── */
+  const trackList = document.getElementById('track-list');
+  if(trackList){
+    const songs = [
+      {t:C.st1, d:C.sd1, u:C.su1},
+      {t:C.st2, d:C.sd2, u:C.su2},
+      {t:C.st3, d:C.sd3, u:C.su3},
+    ];
+    trackList.innerHTML = songs.map((s,i)=>{
+      const icons = ['🎵','🎶','🎤'];
+      const title = s.t || ['Lagu yang selalu mengingatkanku padamu','Lagu yang cocok untuk kita berdua','Artis favoritmu'][i];
+      const desc  = s.d || ['Melodi yang terputar setiap kali aku merindukanmu.','Menggambarkan perjalanan kita dengan sangat sempurna.','Karena aku tahu betapa berartinya musik ini untukmu.'][i];
+      const embedHtml = s.u ? makeSpotifyEmbed(s.u) : '';
+      return `
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:.9rem 1rem;margin-bottom:2px;">
+          <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:${embedHtml?'.7rem':'0'};">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,#34d399,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;flex-shrink:0;">${icons[i]}</div>
+            <div>
+              <div style="font-size:.88rem;font-weight:700;color:#065f46;">${esc(title)}</div>
+              <div style="font-size:.76rem;color:#6b7280;">${esc(desc)}</div>
+            </div>
+          </div>
+          ${embedHtml}
+        </div>`;
     }).join('');
-    div.innerHTML='<div class="quiz-q">'+(qidx+1)+'. '+q.q+'</div><div class="quiz-options">'+optsHtml+'</div><div class="quiz-result" id="qr-'+qidx+'"></div>';
-    c.appendChild(div);
-  });
+  }
+
+  /* ── HAL YANG KUSUKA ── */
+  const likes=[C.l1,C.l2,C.l3,C.l4,C.l5].filter(Boolean);
+  if(likes.length){
+    document.getElementById('likes-list').innerHTML=
+      likes.map(l=>`<div class="like-item"><span>${esc(l)}</span><span class="heart-icon">♡</span></div>`).join('');
+  }
+
+  /* ── TRIVIA ── */
+  triviaData = (C.tq && C.tq.length) ? C.tq : [
+    {q:'Film pertama yang kita tonton bersama?',opts:['Inception','Titanic','La La Land','The Notebook'],ans:2},
+    {q:'Warna favoritku?',opts:['Merah','Biru','Hijau','Ungu'],ans:3},
+    {q:'Di mana kita pertama kali bertemu?',opts:['Taman','Kafe','Sekolah','Mall'],ans:1},
+  ];
 }
 
-function answerQ(qidx,oi,btn){
-  if(answered.indexOf(qidx)>-1)return;
-  answered.push(qidx);
-  var q=quizData[qidx];
-  var opts=btn.parentElement.querySelectorAll('.q-opt');
-  opts.forEach(function(o,i){
-    o.disabled=true;
-    if(i===q.ans)o.classList.add('correct');
-    else if(i===oi)o.classList.add('wrong');
+/* NAV */
+function showPage(id){
+  document.querySelectorAll('.page,.room-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+/* SETUP — GENERATE LINK */
+function generateLink(){
+  const name=document.getElementById('s-name').value.trim();
+  const sender=document.getElementById('s-sender').value.trim();
+  const err=document.getElementById('setup-err');
+  if(!name||!sender){err.classList.add('show');setTimeout(()=>err.classList.remove('show'),2500);return;}
+
+  const data={
+    name,sender,
+    p1:document.getElementById('s-photo1').value.trim(),
+    p2:document.getElementById('s-photo2').value.trim(),
+    p3:document.getElementById('s-photo3').value.trim(),
+    p4:document.getElementById('s-photo4').value.trim(),
+    p5:document.getElementById('s-photo5').value.trim(),
+    v1:document.getElementById('s-video1').value.trim(),
+    v2:document.getElementById('s-video2').value.trim(),
+    st1:document.getElementById('s-song1-title').value.trim(),
+    sd1:document.getElementById('s-song1-desc').value.trim(),
+    su1:document.getElementById('s-song1-url').value.trim(),
+    st2:document.getElementById('s-song2-title').value.trim(),
+    sd2:document.getElementById('s-song2-desc').value.trim(),
+    su2:document.getElementById('s-song2-url').value.trim(),
+    st3:document.getElementById('s-song3-title').value.trim(),
+    sd3:document.getElementById('s-song3-desc').value.trim(),
+    su3:document.getElementById('s-song3-url').value.trim(),
+    l1:document.getElementById('s-like1').value.trim(),
+    l2:document.getElementById('s-like2').value.trim(),
+    l3:document.getElementById('s-like3').value.trim(),
+    l4:document.getElementById('s-like4').value.trim(),
+    l5:document.getElementById('s-like5').value.trim(),
+  };
+
+  /* Trivia */
+  const tqs=document.querySelectorAll('.trivia-q-setup');
+  const triviaArr=[];
+  tqs.forEach(tq=>{
+    const q=tq.querySelector('.tq-question').value.trim();
+    const opts=[...tq.querySelectorAll('.tq-opt')].map(o=>o.value.trim());
+    const ansLetter=tq.querySelector('.tq-answer').value.trim().toUpperCase();
+    const ans={'A':0,'B':1,'C':2,'D':3}[ansLetter]??0;
+    if(q&&opts[0])triviaArr.push({q,opts,ans});
   });
-  var res=document.getElementById('qr-'+qidx);
-  if(oi===q.ans){score++;res.textContent='✓ '+q.fb;}
-  else{res.textContent='✧ '+q.fb;}
-  if(answered.length===quizData.length){
-    setTimeout(function(){
-      var sd=document.getElementById('score-display');
-      sd.style.display='block';
-      document.getElementById('score-num').textContent=score+'/'+quizData.length;
-      var labels=['Semangat Belajar satu sama lain ya! 💪','Bagus! Kamu semakin mengenalnya 💫','Kamu cukup mengenal pasanganmu! 🌹','Hampir sempurna! Kamu sangat mengenalnya 💞','Sempurna! Kamu dan pasanganmu luar biasa serasi! ✨'];
-      document.getElementById('score-label').textContent=labels[score];
-      sd.scrollIntoView({behavior:'smooth',block:'center'});
-    },500);
+  if(triviaArr.length)data.tq=triviaArr;
+
+  const encoded=encodeURIComponent(btoa(JSON.stringify(data)));
+  const url=`${location.origin}${location.pathname}?d=${encoded}`;
+  document.getElementById('link-url-display').textContent=url;
+  document.getElementById('link-result').classList.add('show');
+  document.getElementById('link-result').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function copyLink(){
+  navigator.clipboard.writeText(document.getElementById('link-url-display').textContent).then(()=>{
+    const c=document.getElementById('copy-confirm');c.classList.add('show');setTimeout(()=>c.classList.remove('show'),2500);
+  });
+}
+function previewLink(){
+  location.href=document.getElementById('link-url-display').textContent;
+}
+
+/* ENVELOPE */
+function openEnvelope(){
+  const env=document.getElementById('envelope');
+  if(env.classList.contains('open')){setTimeout(()=>showPage('page-riddle'),400);return;}
+  env.classList.add('open');setTimeout(()=>showPage('page-riddle'),900);
+}
+
+/* SUBMIT NAME */
+document.getElementById('verify-input').addEventListener('keydown',e=>{if(e.key==='Enter')submitName();});
+function submitName(){
+  const val=document.getElementById('verify-input').value.trim();
+  const err=document.getElementById('verify-err');
+  if(!val){
+    err.classList.add('show');
+    document.getElementById('verify-input').style.borderColor='rgba(139,26,46,.5)';
+    setTimeout(()=>{err.classList.remove('show');document.getElementById('verify-input').style.borderColor='';},2200);
+    return;
+  }
+  const display=(targetName&&norm(val)===norm(targetName))?targetName:(targetName||val);
+  window._rName=display;
+  showPage('page-loading');
+  setTimeout(()=>doReveal(display),2200);
+}
+function norm(s){return s.toLowerCase().trim().replace(/\s+/g,' ');}
+
+/* REVEAL */
+function doReveal(name){
+  const from=senderName?`Dengan segenap cinta dari <strong>${senderName}</strong> 💌`:'Dengan cinta yang tulus 💌';
+  document.getElementById('reveal-name').textContent=name+'!';
+  document.getElementById('reveal-wish').innerHTML=
+    `"Semoga hari ini seindah senyummu —<br>penuh kebahagiaan, tawa hangat,<br>dan cinta yang tidak pernah habis."<br>
+    <span style="font-size:.88rem;letter-spacing:1px;margin-top:.8rem;display:block;opacity:.7;">${from}</span>`;
+  showPage('page-reveal');
+  setTimeout(launchConfetti,400);
+}
+
+/* MUSEUM */
+function goToMuseum(){
+  document.getElementById('museum-title').textContent=(window._rName||'Sayang')+"'s Museum Kenangan";
+  showPage('page-museum');
+}
+
+/* GO ROOM */
+function goRoom(key){
+  if(key==='secret'){
+    if(visitedRooms.size<TOTAL_ROOMS){shakeEl(document.getElementById('btn-secret'));return;}
+    showPage('room-secret');return;
+  }
+  if(key==='exit'){showPage('room-exit');return;}
+  visitedRooms.add(key);
+  document.querySelector(`[data-room="${key}"]`)?.classList.add('visited');
+  checkSecret();
+  updateMapGrid();
+  if(key==='achiev')setTimeout(()=>{const f=document.getElementById('progress-fill');if(f)f.style.width='100%';},400);
+  if(key==='trivia')buildTrivia();
+  showPage('room-'+key);
+}
+function backToMuseum(){showPage('page-museum');}
+
+/* SECRET CHECK */
+function checkSecret(){
+  const hint=document.getElementById('secret-hint');
+  const btn=document.getElementById('btn-secret');
+  const icon=document.getElementById('secret-icon');
+  if(visitedRooms.size>=TOTAL_ROOMS){
+    btn.classList.remove('locked');icon.textContent='🔮';
+    hint.textContent='🔮 Ruang Rahasia terbuka! Klik untuk mengungkap kejutannya 💕';
+    hint.style.color='#9b5de5';launchConfetti();
+  } else {
+    hint.textContent=`🔒 Kunjungi ${TOTAL_ROOMS-visitedRooms.size} ruangan lagi untuk membuka Ruang Rahasia`;
+    hint.style.color='';
   }
 }
 
-function resetQuiz(){buildQuiz();}
-buildQuiz();
+/* MAP GRID UPDATE */
+function updateMapGrid(){
+  document.querySelectorAll('.map-cell').forEach(cell=>{
+    const k=cell.dataset.key;
+    if(visitedRooms.has(k))cell.classList.add('visited-cell');
+    if(k==='secret'&&visitedRooms.size>=TOTAL_ROOMS){cell.classList.remove('locked-cell');cell.querySelector('.mc-icon').textContent='🔮';}
+  });
+}
+
+/* TRIVIA BUILD */
+let triviaAnswered=[];
+function buildTrivia(){
+  triviaAnswered=triviaData.map(()=>false);
+  document.getElementById('trivia-score').textContent='';
+  const container=document.getElementById('trivia-questions');
+  container.innerHTML=triviaData.map((td,qi)=>`
+    <div class="question-card" data-q="${qi}">
+      <div class="q-head"><span class="q-brain">🧠</span>${esc(td.q)}</div>
+      <div class="choices">
+        ${td.opts.map((o,bi)=>`<button class="choice-btn" onclick="answerQ(${qi},${bi},${bi===td.ans})">${esc(o)}</button>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function answerQ(qi,bi,isCorrect){
+  const card=document.querySelector(`[data-q="${qi}"]`);
+  card.querySelectorAll('.choice-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===triviaData[qi].ans)b.classList.add('correct');
+    else if(i===bi&&!isCorrect)b.classList.add('wrong');
+  });
+  triviaAnswered[qi]=true;
+  if(triviaAnswered.every(Boolean)){
+    const score=triviaData.filter((_,i)=>{
+      const card=document.querySelector(`[data-q="${i}"]`);
+      return card.querySelector('.choice-btn.correct:not(.wrong)');
+    });
+    const correct=document.querySelectorAll('.question-card .choice-btn.correct:not(.wrong)').length;
+    document.getElementById('trivia-score').textContent=`Skormu: ${correct}/${triviaData.length} 🎉`;
+  }
+}
+
+/* CONFETTI */
+function launchConfetti(){
+  const cols=['#c84b72','#d4a042','#9b5de5','#00b894','#3d7aed','#f77f00','#e84040','#f0d080'];
+  for(let i=0;i<90;i++){
+    const el=document.createElement('div');el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}%;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${2.5+Math.random()*2.5}s;animation-delay:${Math.random()}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*7}px;height:${10+Math.random()*10}px;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),6000);
+  }
+}
+
+/* SHAKE & START OVER */
+function shakeEl(el){['-6px','6px','-4px','4px','0'].forEach((v,i)=>setTimeout(()=>el.style.transform=`translateX(${v})`,i*60));}
+function startOver(){
+  visitedRooms=new Set();window._rName='';
+  document.getElementById('verify-input').value='';
+  document.querySelectorAll('.room-btn').forEach(b=>b.classList.remove('visited'));
+  document.getElementById('btn-secret').classList.add('locked');
+  document.getElementById('secret-icon').textContent='🔒';
+  document.getElementById('secret-hint').textContent='🔒 Kunjungi semua ruangan untuk membuka Ruang Rahasia';
+  document.getElementById('secret-hint').style.color='';
+  document.getElementById('envelope').classList.remove('open');
+  const pf=document.getElementById('progress-fill');if(pf)pf.style.width='0';
+  document.querySelectorAll('.map-cell').forEach(c=>{c.classList.remove('visited-cell');if(c.dataset.key==='secret'){c.classList.add('locked-cell');c.querySelector('.mc-icon').textContent='🔒';}});
+  showPage('page-mystery');
+}
 </script>
 </body>
 </html>
