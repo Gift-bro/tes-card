@@ -327,14 +327,83 @@ body{font-family:'Lato',sans-serif;background:var(--ink);min-height:100vh;overfl
 .choice-btn:disabled{cursor:default;}
 
 /* ── SECRET ── */
+/* ── SECRET ── */
 .secret-wrap{background:linear-gradient(135deg,#faf5ff,#ede9fe);border-radius:16px;padding:1.4rem;border:1px solid #ddd6fe;text-align:center;}
 .secret-lock{font-size:2rem;color:#7c3aed;margin-bottom:.5rem;display:block;}
 .secret-photo-frame{background:#fff;border-radius:12px;overflow:hidden;margin:1rem auto;max-width:300px;border:2px solid #e9d5ff;}
 .secret-photo-frame img{width:100%;display:block;object-fit:cover;}
-.secret-ph{aspect-ratio:3/4;background:linear-gradient(135deg,#e879f9,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:3rem;}
 .secret-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:#6d28d9;line-height:1.7;margin:1rem 0;}
 .secret-heart{font-size:1.6rem;display:block;margin:.4rem 0;}
 .secret-you{font-size:1.1rem;font-weight:700;color:#7c3aed;}
+
+/* ── BEGINNING: 2 foto atas, teks bawah ── */
+.begin-photos-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:12px;
+}
+.begin-photo-col{ display:flex; flex-direction:column; }
+.begin-photo-box{
+  width:100%;
+  aspect-ratio:4/3;
+  border-radius:12px;
+  overflow:hidden;
+  background:#fdf2f8;
+  border:1px solid #fce7f3;
+  display:flex; align-items:center; justify-content:center;
+}
+.begin-photo-box img{
+  width:100%; height:100%;
+  object-fit:contain;
+  background:#fff;
+  display:block;
+}
+.begin-photo-placeholder{ font-size:2rem; color:#f9a8d4; }
+
+/* teks cerita di bawah foto */
+.begin-story-box{
+  background:linear-gradient(135deg,#fdf4ff,#fce7f3);
+  border:1px solid #e9d5ff;
+  border-radius:14px;
+  padding:1.2rem 1.1rem;
+  text-align:center;
+  margin-bottom:4px;
+}
+.begin-story-ornament{ font-size:1.4rem; margin-bottom:.5rem; display:block; }
+.begin-story-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;
+  color:#6b21a8;
+  font-style:italic;
+  line-height:1.8;
+  font-weight:300;
+}
+.photo-label{padding:.3rem .2rem .55rem;font-size:.68rem;font-weight:700;color:#be185d;letter-spacing:.5px;text-align:center;}
+
+/* ── SECRET ROOM: foto landscape ── */
+.secret-photo-frame-land{
+  background:#fff;
+  border-radius:12px;
+  overflow:hidden;
+  margin:1rem auto;
+  width:100%;
+  max-width:380px;
+  border:2px solid #e9d5ff;
+}
+.secret-photo-frame-land img{
+  width:100%;
+  display:block;
+  object-fit:contain;
+  background:#fff;
+  aspect-ratio:16/9;
+}
+.secret-ph{
+  aspect-ratio:16/9;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#e879f9,#7c3aed);
+  font-size:3rem;
+}
 
 /* ── EXIT / FINAL ── */
 .final-wrap{text-align:center;}
@@ -668,19 +737,29 @@ body{font-family:'Lato',sans-serif;background:var(--ink);min-height:100vh;overfl
       <div class="room-icon-circle" style="background:linear-gradient(135deg,#f0487a,#c41850);">💗</div>
       <h2>Awal Kita</h2>
     </div>
-    <div class="photo-2col">
-      <div class="photo-card">
-        <div id="begin-photo1-wrap"><div class="photo-placeholder-box">📷</div></div>
+
+    <!-- 2 FOTO berdampingan di atas -->
+    <div class="begin-photos-row">
+      <div class="begin-photo-col">
+        <div class="begin-photo-box" id="begin-photo1-wrap">
+          <div class="begin-photo-placeholder">📷</div>
+        </div>
         <div class="photo-label">Cerita Pertemuan Pertama</div>
       </div>
-      <div class="photo-story-box">
-        <p class="story-text">Selamat datang di museum yang sangat istimewa ini — sebuah tempat yang dibuat khusus untuk merayakan ulang tahun sayanggg. Setiap ruangan menyimpan sepotong cerita, dari awal pertemuan, kenangan indah, tantangan yang kita lalui bersama, hingga mimpi-mimpi yang ingin kita wujudkan.💕</p>
+      <div class="begin-photo-col">
+        <div class="begin-photo-box" id="begin-photo2-wrap">
+          <div class="begin-photo-placeholder">🥰</div>
+        </div>
+        <div class="photo-label">Foto Pertama Bersama</div>
       </div>
     </div>
-    <div class="photo-wide">
-      <div id="begin-photo2-wrap"><div class="photo-placeholder-wide">🥰</div></div>
-      <div class="photo-label">Foto Pertama Bersama</div>
+
+    <!-- TEKS di bawah foto -->
+    <div class="begin-story-box">
+      <div class="begin-story-ornament">💗</div>
+      <p class="begin-story-text">Aku masih ingat pertama kali kita bersama. Sejak saat itu, aku merasa ada sesuatu yang membuat sayanggg berbeda. Banyak hal yang sudah kita lewati sejak hari itu, dan aku senang karena jalan kita bisa bertemu dan selalu bersama sayanggg. 💕</p>
     </div>
+
     <button class="btn-back" onclick="backToMuseum()">Kembali ke Menu</button>
   </div>
 </div>
@@ -867,13 +946,13 @@ body{font-family:'Lato',sans-serif;background:var(--ink);min-height:100vh;overfl
     </div>
     <div class="secret-wrap">
       <span class="secret-lock">🔓</span>
-      <div class="secret-photo-frame" id="secret-photo-frame"><div class="secret-ph">💑</div></div>
+      <div class="secret-photo-frame-land" id="secret-photo-frame"><div class="secret-ph">💑</div></div>
       <p class="secret-quote">"Selamat ulang tahun yang ke-23, sayanggg. Semoga semua hal yang sayanggg lakukan hari ini berjalan dengan mudah dan lancar ya, sayanggg.
 Hari ini adalah hari di mana sayanggg berulang tahun, dan aku ingin berterima kasih kepada sayanggg karena sudah menjadi bagian dari hidupku. Banyak hal sudah kita lalui bersama, dari hal-hal sederhana, baik itu senang maupun sedih.
-Di usia yang baru ini, aku berharap dan berdoa agar sayanggg selalu diberikan kesehatan, kebahagiaan, kemudahan, kelancaran, perlindungan, dan kekuatan dalam menjalani kehidupan di setiap langkah sayanggg. Semoga segala hal yang sedang sayanggg perjuangkan dapat berjalan dengan baik, dan semoga cita-cita sayanggg perlahan demi perlahan dapat terwujud. Semoga juga setiap kesulitan yang datang dapat sayanggg lewati dengan mudah.
-Aku juga berharap sayanggg bisa lebih menghargai diri sayanggg sendiri karena sebenarnya sayanggg adalah seseorang yang berharga. Jangan terlalu keras pada diri sayanggg sendiri saat ada hal yang tidak berjalan sesuai rencana. Tidak apa-apa kalau sayanggg ingin beristirahat terlebih dahulu jika merasa lelah, dan tidak apa-apa juga jika berjalan sedikit lebih pelan selama sayanggg tetap melangkah maju.
+<p class="secret-quote">Di usia yang baru ini, aku berharap dan berdoa agar sayanggg selalu diberikan kesehatan, kebahagiaan, kemudahan, kelancaran, perlindungan, dan kekuatan dalam menjalani kehidupan di setiap langkah sayanggg. Semoga segala hal yang sedang sayanggg perjuangkan dapat berjalan dengan baik, dan semoga cita-cita sayanggg perlahan demi perlahan dapat terwujud. Semoga juga setiap kesulitan yang datang dapat sayanggg lewati dengan mudah.</p>
+Aku juga berharap sayanggg bisa lebih menghargai diri sayanggg sendiri karena sebenarnya sayanggg adalah seseorang yang berharga. Jangan terlalu keras pada diri sayanggg sendiri saat ada hal yang tidak berjalan sesuai rencana. Tidak apa-apa kalau sayanggg ingin beristirahat terlebih dahulu jika merasa lelah, dan tidak apa-apa juga jika berjalan sedikit lebih pelan selama sayanggg tetap melangkah maju.</p>
 Terima kasih untuk semua perhatian, effort, waktu, cerita, dan kenangan yang sudah kita lewati bersama. Tidak ada yang tahu bagaimana peristiwa di masa depan nanti, tetapi aku bersyukur karena sampai saat ini aku masih bisa menjadi bagian dari perjalanan hidup sayanggg.
-Semoga tahun ini membawa lebih banyak kebahagiaan dan alasan untuk tersenyum, lebih banyak kesempatan yang baik, serta rezeki yang datang kepada sayanggg. Selamat bertambah usia, sayanggg. Semoga hari ini menjadi awal dari tahun yang penuh hal-hal baik untuk sayanggg.
+<p class="secret-quote">Semoga tahun ini membawa lebih banyak kebahagiaan dan alasan untuk tersenyum, lebih banyak kesempatan yang baik, serta rezeki yang datang kepada sayanggg. Selamat bertambah usia, sayanggg. Semoga hari ini menjadi awal dari tahun yang penuh hal-hal baik untuk sayanggg.
 Selamat ulang tahun ya, sayanggg. Semoga doa-doa terbaik yang sayanggg panjatkan menyertai sayanggg hari ini dan seterusnya.
 "</p>
       <span class="secret-heart">💗</span>
@@ -968,7 +1047,7 @@ const CONFIG = {
   VIDEO_KENANGAN    : "https://drive.google.com/file/d/1PgBdmRky6F5IdZmfA4ISn0tP7q1LecQE/view?usp=drive_link",  // ← Link Google Drive video kenangan (Ruang: Kenangan)
                            //   cth: "https://drive.google.com/file/d/1aBcDeFgH.../view"
 
-  VIDEO_PESAN_AKHIR : "https://drive.google.com/file/d/1PgBdmRky6F5IdZmfA4ISn0tP7q1LecQE/view?usp=drive_link",  // ← Link Google Drive video pesan terakhir (Ruang: Penutup)
+  VIDEO_PESAN_AKHIR : "https://drive.google.com/file/d/1Z3rJ2D3LUszDqBFAmohf6x72TuzJULh2/view?usp=drive_link",  // ← Link Google Drive video pesan terakhir (Ruang: Penutup)
                            //   cth: "https://drive.google.com/file/d/1aBcDeFgH.../view"
 
   /* ----------------------------------------------------------
@@ -983,17 +1062,17 @@ const CONFIG = {
     {
       judul : "Lagu yang selalu mengingatkanku padamu",      // ← Judul lagu 1
       deskripsi : "Melodi yang terputar setiap kali aku merindukanmu.",  // ← Keterangan
-      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
+      link  : "https://open.spotify.com/track/3LaOU1rxGZFPRC4I602Z3O?si=bed784375eb34aca&nd=1&dlsi=756856c0ec7f45a4",                                            // ← Link Spotify/YouTube
     },
     {
       judul : "Lagu yang cocok untuk kita berdua",          // ← Judul lagu 2
       deskripsi : "Menggambarkan perjalanan kita dengan sangat sempurna.",
-      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
+      link  : "https://open.spotify.com/track/1FCQLXqwkKiqXNVAos5j2B?si=a5b75d079cfe421f&nd=1&dlsi=86b894d9c9974f81",                                            // ← Link Spotify/YouTube
     },
     {
-      judul : "Artis favoritmu",                            // ← Judul lagu 3
+      judul : "Lagu khusus untukmu",                            // ← Judul lagu 3
       deskripsi : "Karena aku tahu betapa berartinya musik ini untukmu.",
-      link  : "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=37262bf76ec24ce5",                                            // ← Link Spotify/YouTube
+      link  : "https://open.spotify.com/track/4nTjkWK590oBDcnIxTr1mI?si=e0ee616c63f24262&nd=1&dlsi=651c1734168b4f9b",                                            // ← Link Spotify/YouTube
     },
   ],
 
@@ -1016,18 +1095,18 @@ const CONFIG = {
   TRIVIA : [
     {
       pertanyaan : "Tempat pertama kita pergi jalan Bersama?",
-      pilihan    : ["Inception", "Titanic", "La La Land", "The Notebook"],
-      ans        : 2,   // ← La La Land (indeks ke-2)
+      pilihan    : ["Transmart", "GOR", "CGV", "UNP"],
+      ans        : 1,   // ← La La Land (indeks ke-2)
     },
     {
       pertanyaan : "Warna Favoritku?",
-      pilihan    : ["Merah", "Biru", "Hijau", "Ungu"],
-      ans        : 3,   // ← Ungu (indeks ke-3)
+      pilihan    : ["Merah", "Biru", "Hijau", "Silver"],
+      ans        : 4,   // ← Ungu (indeks ke-3)
     },
     {
       pertanyaan : "Hal yang paling kamu sukai?",
-      pilihan    : ["Taman", "Kafe", "Sekolah", "Mall"],
-      ans        : 1,   // ← Kafe (indeks ke-1)
+      pilihan    : ["Tidur", "Jajan", "Nonton", "Bersih-bersih"],
+      ans        : 1,2,3,   // ← Kafe (indeks ke-1)
     },
   ],
 
@@ -1234,7 +1313,7 @@ function applyContent(){
     const f = document.getElementById('secret-photo-frame');
     if(f && src && src !== '__google_photos__')
       f.innerHTML = `<img src="${src}"
-        style="width:100%;display:block;object-fit:contain;background:#fff;aspect-ratio:3/4;"
+        style="width:100%;display:block;object-fit:contain;background:#fff;aspect-ratio:16/9;"
         onerror="this.parentElement.innerHTML='<div class=secret-ph>💑</div>'">`;
   }
 
